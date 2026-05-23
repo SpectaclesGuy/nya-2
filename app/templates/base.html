@@ -137,11 +137,11 @@
       }
     </style>
   </head>
-  <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
+  <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white overflow-x-hidden">
     <nav
-      class="flex justify-between items-center w-full px-5 sm:px-8 md:px-margin-desktop py-4 bg-surface z-50 full-width top-0 border-b-2 border-outline fixed"
+      class="flex justify-between items-center w-full gap-2 flex-wrap sm:flex-nowrap px-4 sm:px-8 md:px-margin-desktop py-3 sm:py-4 bg-surface z-50 full-width top-0 border-b-2 border-outline fixed"
     >
-      <a class="font-headline-md text-headline-md font-bold tracking-tighter" href="/">NOT / AVERAGE</a>
+      <a class="font-headline-md font-bold tracking-tighter text-[22px] leading-tight sm:text-headline-md sm:text-headline-md" href="/">NOT / AVERAGE</a>
       <div class="hidden md:flex gap-8 items-center">
         {% if user and user.role == "admin" %}
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
@@ -177,7 +177,7 @@
       </div>
 
       <details class="md:hidden relative">
-        <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-4 py-2 font-label-md text-label-md font-bold inline-flex items-center gap-2">
+        <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-3 py-2 font-label-sm text-label-sm font-bold inline-flex items-center gap-2 whitespace-nowrap">
           <span class="material-symbols-outlined">menu</span>
           Menu
         </summary>
@@ -198,12 +198,12 @@
         </div>
       </details>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         {% if user %}
         <form action="/auth/logout" method="post">
           <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
           <button
-            class="border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors"
+            class="border-2 border-on-surface bg-surface px-3 sm:px-6 py-2 font-label-sm sm:font-label-md text-label-sm sm:text-label-md font-bold hover:bg-surface-container-high transition-colors whitespace-nowrap"
             type="submit"
           >
             Logout
@@ -211,7 +211,7 @@
         </form>
         {% else %}
         <a
-          class="bg-tertiary text-white px-6 py-2 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all"
+          class="bg-tertiary text-white px-3 sm:px-6 py-2 border-2 border-on-surface font-label-sm sm:font-label-md text-label-sm sm:text-label-md font-bold hover:bg-tertiary-container transition-all whitespace-nowrap"
           href="/auth/google/login"
           >Continue with Google</a
         >

@@ -126,16 +126,16 @@
         ::-webkit-scrollbar-thumb { background: #3A3A36; }
     </style>
 </head>
-<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
+  <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white overflow-x-hidden">
 <!-- TopNavBar -->
-<nav class="flex justify-between items-center w-full px-5 sm:px-8 md:px-margin-desktop py-4 bg-surface dark:bg-surface-dim z-50 docked full-width top-0 border-b-2 border-outline dark:border-outline-variant fixed">
-<div class="font-headline-md text-headline-md font-bold tracking-tighter text-on-surface dark:text-on-surface-variant">NOT / AVERAGE</div>
+<nav class="flex justify-between items-center w-full gap-2 flex-wrap sm:flex-nowrap px-4 sm:px-8 md:px-margin-desktop py-3 sm:py-4 bg-surface dark:bg-surface-dim z-50 docked full-width top-0 border-b-2 border-outline dark:border-outline-variant fixed">
+<div class="font-headline-md font-bold tracking-tighter text-on-surface dark:text-on-surface-variant text-[22px] leading-tight sm:text-headline-md sm:text-headline-md">NOT / AVERAGE</div>
 <div class="hidden md:flex gap-8 items-center">
 <a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#manifesto">Manifesto</a>
 <a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Active Forges</a>
 </div>
 <details class="md:hidden relative">
-  <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-4 py-2 font-label-md text-label-md font-bold inline-flex items-center gap-2">
+  <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-3 py-2 font-label-sm text-label-sm font-bold inline-flex items-center gap-2 whitespace-nowrap">
     <span class="material-symbols-outlined">menu</span>
     Menu
   </summary>
@@ -145,8 +145,8 @@
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
   </div>
 </details>
-<div class="flex items-center gap-3" id="topnav-auth-slot">
-  <a class="bg-tertiary text-white px-6 py-2 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all inline-flex items-center justify-center" href="/auth/google/login">
+  <div class="flex items-center gap-2 sm:gap-3 shrink-0" id="topnav-auth-slot">
+  <a class="bg-tertiary text-white px-3 sm:px-6 py-2 border-2 border-on-surface font-label-sm sm:font-label-md text-label-sm sm:text-label-md font-bold hover:bg-tertiary-container transition-all inline-flex items-center justify-center whitespace-nowrap" href="/auth/google/login">
               Enter The Forge
           </a>
 </div>
@@ -158,7 +158,7 @@
 <div class="mb-6">
 <span class="stamp font-label-sm text-primary border-primary">JUNE COHORT / FORGE OPEN</span>
 </div>
-<h1 class="font-display-lg text-display-lg uppercase mb-6 leading-none">
+<h1 class="font-display-lg uppercase mb-6 leading-none text-[44px] sm:text-[56px] md:text-display-lg">
                     Build what makes you <span class="text-primary">impossible</span> to ignore.
                 </h1>
 <p class="font-body-lg text-body-lg max-w-2xl text-on-surface-variant mb-10">
@@ -570,12 +570,12 @@
                 slot.innerHTML = '';
 
                 const profile = document.createElement('a');
-                profile.className = 'border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center';
+                profile.className = 'border-2 border-on-surface bg-surface px-3 sm:px-6 py-2 font-label-sm sm:font-label-md text-label-sm sm:text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center whitespace-nowrap';
                 profile.href = '/candidate/profile';
                 profile.textContent = 'Profile';
 
                 const logoutBtn = document.createElement('button');
-                logoutBtn.className = 'border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors';
+                logoutBtn.className = 'border-2 border-on-surface bg-surface px-3 sm:px-6 py-2 font-label-sm sm:font-label-md text-label-sm sm:text-label-md font-bold hover:bg-surface-container-high transition-colors whitespace-nowrap';
                 logoutBtn.type = 'button';
                 logoutBtn.textContent = 'Logout';
 
