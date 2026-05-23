@@ -1,4 +1,5 @@
 .env
+.env.*
 .venv/
 __pycache__/
 .pytest_cache/
@@ -8,10 +9,12 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+*.pem
+*.key
 dist/
 build/
 node_modules/
 .DS_Store
 nya__job_secrets.txt
 client_secret_*.json
-security.md
+security.md 

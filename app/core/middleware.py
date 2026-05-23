@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.types import ASGIApp, Receive, Scope, Send
 
@@ -17,6 +18,10 @@ def add_session_middleware(app: FastAPI) -> None:
         session_cookie="nya_session",
         max_age=60 * 60 * 24 * 7,
     )
+
+    allowed_hosts = settings.allowed_hosts_list
+    if allowed_hosts:
+        app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
 
     # CORS is primarily relevant if/when we add JS-driven flows; keep it tight.
     origins = settings.allowed_origins_list
@@ -44,11 +49,16 @@ class SecurityHeadersMiddleware:
                     (b"x-frame-options", b"DENY"),
                     (b"referrer-policy", b"strict-origin-when-cross-origin"),
                     (b"permissions-policy", b"geolocation=(), microphone=(), camera=()"),
+                    *(
+                        [(b"strict-transport-security", b"max-age=31536000; includeSubDomains")]
+                        if settings.cookie_secure_effective
+                        else []
+                    ),
                     # Tailwind CDN + Google fonts currently required by Stitch landing page.
                     (
                         b"content-security-policy",
                         b"default-src 'self'; "
-                        b"img-src 'self' data:; "
+                        b"img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com; "
                         b"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                         b"font-src 'self' https://fonts.gstatic.com; "
                         b"script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "

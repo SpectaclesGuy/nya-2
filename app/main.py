@@ -60,6 +60,10 @@ def create_app() -> FastAPI:
         # Preserve the existing Stitch-generated landing page as-is.
         return FileResponse("index.html", media_type="text/html; charset=utf-8")
 
+    @app.get("/healthz")
+    async def healthz() -> dict:
+        return {"ok": True}
+
     return app
 
 

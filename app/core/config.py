@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     smtp_from_name: str = "NYA Job Portal"
 
     allowed_origins: str = ""
+    allowed_hosts: str = ""
 
     initial_admin_email: str = ""
     initial_admin_name: str = ""
@@ -56,6 +57,11 @@ class Settings(BaseSettings):
     @property
     def allowed_origins_list(self) -> list[str]:
         raw = [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
+        return sorted(set(raw))
+
+    @property
+    def allowed_hosts_list(self) -> list[str]:
+        raw = [h.strip() for h in self.allowed_hosts.split(",") if h.strip()]
         return sorted(set(raw))
 
 

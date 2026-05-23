@@ -184,6 +184,11 @@ async def dev_login(request: Request):
     if settings.environment.lower() == "production" or not settings.dev_login_enabled:
         return RedirectResponse("/?error=disabled", status_code=302)
 
+    # Extra hardening: even in dev mode, only allow localhost usage by default.
+    client_host = getattr(request.client, "host", None)
+    if client_host not in {"127.0.0.1", "::1"}:
+        return RedirectResponse("/?error=disabled", status_code=302)
+
     token = request.query_params.get("token") or request.headers.get("X-Dev-Token")
     if not token or not settings.dev_login_token or token != settings.dev_login_token:
         return RedirectResponse("/?error=unauthorized", status_code=302)

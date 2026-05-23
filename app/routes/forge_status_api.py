@@ -40,6 +40,9 @@ def _sse(data: dict) -> str:
 @router.get("/events/forge-status")
 async def forge_status_events(request: Request) -> StreamingResponse:
     async def event_gen():
+        keepalive_s = 20
+        refresh_s = 15
+
         # Send initial snapshot.
         try:
             doc = await ForgeStatusService.get_status()
@@ -48,38 +51,48 @@ async def forge_status_events(request: Request) -> StreamingResponse:
         initial = ForgeStatusOut(available=False) if not doc else ForgeStatusOut.model_validate(doc | {"available": True})
         yield _sse(initial.model_dump())
 
-        # Keepalive + change stream updates.
-        keepalive_s = 20
+        # "Real-time enough": push periodic snapshots to avoid client polling.
+        # If change streams work, we'll emit immediately on forge_status updates too.
+        next_refresh = asyncio.get_event_loop().time() + refresh_s
+        last_payload: str | None = None
+
         while True:
             if await request.is_disconnected():
                 return
+
+            now = asyncio.get_event_loop().time()
+            timeout = max(0.1, min(keepalive_s, next_refresh - now))
+
+            got_change = False
             try:
                 async with ForgeStatusService.watch_status_changes() as changes:
-                    while True:
-                        if await request.is_disconnected():
-                            return
-                        try:
-                            change = await asyncio.wait_for(changes.__anext__(), timeout=keepalive_s)
-                        except asyncio.TimeoutError:
-                            # Comment keepalive (ignored by EventSource but keeps proxies happy).
-                            yield ": keepalive\n\n"
-                            continue
-                        except StopAsyncIteration:
-                            break
-
-                        # On any relevant change, re-fetch and emit canonical snapshot.
-                        doc = await ForgeStatusService.get_status()
-                        if not doc:
-                            yield _sse(ForgeStatusOut(available=False).model_dump())
-                        else:
-                            yield _sse(ForgeStatusOut.model_validate(doc | {"available": True}).model_dump())
+                    try:
+                        await asyncio.wait_for(changes.__anext__(), timeout=timeout)
+                        got_change = True
+                    except asyncio.TimeoutError:
+                        got_change = False
+                    except StopAsyncIteration:
+                        got_change = False
             except Exception:
-                # If change streams aren't available (or DB not connected), keep SSE alive with keepalives.
-                # This prevents the client from switching to polling.
-                while True:
-                    if await request.is_disconnected():
-                        return
-                    yield ": keepalive\n\n"
-                    await asyncio.sleep(keepalive_s)
+                # Change streams not available; fall back to timed refresh only.
+                got_change = False
+
+            # keepalive (ignored by EventSource but keeps proxies happy).
+            yield ": keepalive\n\n"
+
+            now = asyncio.get_event_loop().time()
+            if got_change or now >= next_refresh:
+                next_refresh = now + refresh_s
+                try:
+                    doc = await ForgeStatusService.get_status()
+                except RuntimeError:
+                    doc = None
+
+                out = ForgeStatusOut(available=False) if not doc else ForgeStatusOut.model_validate(doc | {"available": True})
+                payload = _sse(out.model_dump())
+                # Avoid spamming identical snapshots.
+                if payload != last_payload:
+                    yield payload
+                    last_payload = payload
 
     return StreamingResponse(event_gen(), media_type="text/event-stream")

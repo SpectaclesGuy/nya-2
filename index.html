@@ -169,7 +169,7 @@
 <span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
 </div>
 <div class="font-label-sm text-label-sm uppercase mb-4 opacity-60" id="forge-status-state">Status: —</div>
-<div class="font-headline-md text-headline-md mb-2">FORGE STATUS</div>
+<div class="font-headline-md text-headline-md mb-2">PORTAL STATUS</div>
 <div class="space-y-6 mt-8">
 <div>
 <div class="flex justify-between font-label-sm mb-1">
@@ -182,11 +182,11 @@
 </div>
 <div class="grid grid-cols-2 gap-4">
 <div class="border border-on-surface p-3">
-<div class="font-label-sm opacity-60">POD TRACKS</div>
+<div class="font-label-sm opacity-60">PUBLISHED JOBS</div>
 <div class="font-label-md font-bold" id="forge-status-pods">—</div>
 </div>
 <div class="border border-on-surface p-3 bg-primary text-white">
-<div class="font-label-sm opacity-80">SEATS LEFT</div>
+<div class="font-label-sm opacity-80">TOTAL APPLICATIONS</div>
 <div class="font-label-md font-bold" id="forge-status-seats">—</div>
 </div>
 </div>
@@ -442,7 +442,7 @@
 </div>
 </footer>
 <script>
-        // Forge Status: fetch real-time data from backend and update periodically.
+        // Portal Status (Forge Status panel): real-time data from backend.
         const forgeStatusEls = {
             state: document.getElementById('forge-status-state'),
             heat: document.getElementById('forge-status-heat'),
@@ -475,8 +475,11 @@
             if (forgeStatusEls.state) forgeStatusEls.state.textContent = `Status: ${statusText}`;
             if (forgeStatusEls.heat) forgeStatusEls.heat.textContent = `${Math.round(heatPercent)}% — ${heatLabel || '—'}`;
             if (forgeStatusEls.heatbar) forgeStatusEls.heatbar.style.width = `${clamp01(heatPercent)}%`;
-            if (forgeStatusEls.pods && Number.isFinite(podsActive)) forgeStatusEls.pods.textContent = `${podsActive} ACTIVE`;
-            if (forgeStatusEls.seats && Number.isFinite(seatsLeft)) forgeStatusEls.seats.textContent = `${pad2(seatsLeft)} REMAIN`;
+            // Re-mapped portal metrics:
+            // - pod_tracks_active -> published jobs
+            // - seats_left        -> total applications
+            if (forgeStatusEls.pods && Number.isFinite(podsActive)) forgeStatusEls.pods.textContent = `${podsActive} LIVE`;
+            if (forgeStatusEls.seats && Number.isFinite(seatsLeft)) forgeStatusEls.seats.textContent = `${seatsLeft} TOTAL`;
             return true;
         };
 
