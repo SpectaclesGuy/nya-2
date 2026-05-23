@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto">
+      <div class="mb-6"><span class="stamp font-label-sm border-on-surface">JOB</span></div>
+      {% if not job %}
+        <h1 class="font-headline-lg text-headline-lg mb-4">Job not found</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">This job is not published (or doesn’t exist).</p>
+      {% else %}
+        <h1 class="font-headline-lg text-headline-lg mb-4">{{ job.title }}</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          {{ job.company_or_team }} · {{ job.location }} · {{ job.job_type }}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          {% if user and user.role == "candidate" %}
+            {% if existing_app_id %}
+              <a
+                class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center"
+                href="/candidate/applications/{{ existing_app_id }}"
+              >
+                View your submission
+              </a>
+              <div class="font-body-md text-body-md text-on-surface-variant self-center">
+                You’ve already applied for this job.
+              </div>
+            {% else %}
+              <a
+                class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center justify-center"
+                href="/jobs/{{ job._id }}/apply"
+              >
+                Apply
+              </a>
+            {% endif %}
+          {% else %}
+            <a
+              class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center justify-center"
+              href="/auth/google/login"
+            >
+              Continue with Google to apply
+            </a>
+          {% endif %}
+        </div>
+        <div class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-6">
+          <div>
+            <div class="font-label-sm opacity-50 mb-2 uppercase">Description</div>
+            <div class="font-body-md text-body-md whitespace-pre-wrap">{{ job.description }}</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

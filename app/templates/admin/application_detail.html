@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-4xl mx-auto">
+      <div class="mb-10">
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+        <h1 class="font-headline-lg text-headline-lg mt-4">Application</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Job: <span class="font-label-md font-bold">{{ job.title if job else application.job_id }}</span>
+        </p>
+      </div>
+
+      <div class="bg-surface border-2 border-on-surface p-8 space-y-4">
+        <div class="flex items-center justify-between gap-6 flex-wrap">
+          <div>
+            <div class="font-label-sm opacity-50 uppercase">Candidate</div>
+            <div class="font-headline-md text-headline-md">{{ application.candidate_name or "—" }}</div>
+            <div class="font-body-md text-body-md text-on-surface-variant">{{ application.candidate_email or "—" }}</div>
+          </div>
+          <div class="text-right">
+            <div class="font-label-sm opacity-50 uppercase">Status</div>
+            <div class="stamp font-label-sm border-on-surface">{{ application.status }}</div>
+          </div>
+        </div>
+        {% if application.resume_url %}
+          <div class="pt-4 border-t border-outline-variant">
+            <div class="flex flex-wrap gap-3">
+              <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="{{ application.resume_url }}" target="_blank" rel="noopener noreferrer">
+                Open resume (direct)
+              </a>
+              <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="/admin/applications/{{ application._id }}/resume">
+                Download resume
+              </a>
+            </div>
+            <div class="font-label-sm text-label-sm opacity-60 mt-3">
+              If it doesn’t open in-browser, it should download. Ensure Cloudinary is configured and the upload succeeded.
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mt-10 space-y-6">
+        {% for ans in (application.answers or []) %}
+          <div class="bg-surface border-2 border-on-surface p-8">
+            <div class="font-headline-md text-headline-md">{{ ans.question_text }}</div>
+            <div class="font-label-sm opacity-50 uppercase mt-2">{{ ans.question_type }}</div>
+            <div class="mt-6 border-t border-outline-variant pt-6">
+              {% if ans.answer is string %}
+                <div class="font-body-md text-body-md whitespace-pre-wrap">{{ ans.answer or "—" }}</div>
+              {% else %}
+                <ul class="list-disc pl-6 space-y-1">
+                  {% for v in ans.answer %}
+                    <li class="font-body-md text-body-md">{{ v }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

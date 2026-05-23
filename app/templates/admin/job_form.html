@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+        <div>
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+        <h1 class="font-headline-lg text-headline-lg mt-4">{{ "Edit job" if job else "Create job" }}</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">Draft first, then publish.</p>
+        </div>
+        <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors" href="/admin/jobs">Back</a>
+      </div>
+
+      {% if request.query_params.get("error") %}
+        <div class="border-2 border-on-surface bg-error-container p-4 mb-8">
+          <div class="font-label-md font-bold">Couldn’t save job.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">{{ request.query_params.get("error") }}</div>
+        </div>
+      {% endif %}
+
+      <form class="bg-surface border-2 border-on-surface p-8 space-y-6" method="post" action="{{ action }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+        {% if job %}
+          <div class="flex items-center justify-between gap-6 flex-wrap border-b border-outline-variant pb-6">
+            <div class="font-label-sm opacity-60 uppercase">Status</div>
+            <span class="stamp font-label-sm {% if job.status == 'published' %}text-primary border-primary{% elif job.status == 'closed' %}text-secondary border-secondary{% else %}border-on-surface{% endif %}">
+              {{ job.status }}
+            </span>
+          </div>
+        {% endif %}
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="title">Title</label>
+          <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="title" name="title" required value="{{ job.title if job else '' }}" />
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block font-label-md text-label-md mb-2" for="company_or_team">Company / Team</label>
+            <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="company_or_team" name="company_or_team" required value="{{ job.company_or_team if job else '' }}" />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md mb-2" for="job_type">Job type</label>
+            <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="job_type" name="job_type" required value="{{ job.job_type if job else '' }}" placeholder="Internship / Full-time" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block font-label-md text-label-md mb-2" for="location">Location</label>
+            <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="location" name="location" required value="{{ job.location if job else '' }}" />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md mb-2" for="deadline">Deadline (optional)</label>
+            <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="deadline" name="deadline" type="datetime-local" value="{% if job and job.deadline %}{{ job.deadline.isoformat()[:16] }}{% endif %}" />
+            <div class="font-label-sm text-label-sm opacity-60 mt-2">Use your local timezone.</div>
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="description">Description</label>
+          <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[220px]" id="description" name="description" required>{{ job.description if job else '' }}</textarea>
+        </div>
+        <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
+          Save
+        </button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-center justify-between gap-6 flex-wrap">
+        <div>
+          <div class="mb-4"><span class="stamp font-label-sm text-primary border-primary">PUBLIC</span></div>
+          <h1 class="font-headline-lg text-headline-lg mb-2">Jobs</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant">Published opportunities appear here.</p>
+        </div>
+      </div>
+
+      {% if not jobs %}
+        <div class="mt-10 bg-surface border-2 border-on-surface p-10">
+          <div class="font-headline-md text-headline-md mb-2 uppercase">No postings yet</div>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Admins can create and publish jobs from the admin dashboard.
+          </p>
+        </div>
+      {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          {% for job in jobs %}
+            <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/jobs/{{ job._id }}">
+              <div class="font-label-sm opacity-50 mb-1">{{ job.company_or_team }}</div>
+              <div class="font-headline-md text-headline-md mb-2">{{ job.title }}</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">{{ job.location }} · {{ job.job_type }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

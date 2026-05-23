@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOT / AVERAGE</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=Space+Mono:wght@400;500;700&amp;family=Hanken+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f6f3f2",
+                    "outline-variant": "#e4beb3",
+                    "primary-fixed": "#ffdbd0",
+                    "secondary-fixed": "#ffddaf",
+                    "on-surface": "#1c1b1b",
+                    "on-tertiary-fixed-variant": "#001de0",
+                    "secondary-container": "#ffba43",
+                    "tertiary-container": "#7a87ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#541400",
+                    "surface-container-highest": "#e5e2e1",
+                    "tertiary": "#2a3fff",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#5b4038",
+                    "primary-container": "#ff5a1f",
+                    "on-primary-fixed-variant": "#852400",
+                    "on-tertiary-container": "#000f91",
+                    "tertiary-fixed": "#dfe0ff",
+                    "on-primary-fixed": "#3a0b00",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0edec",
+                    "background": "#fcf9f8",
+                    "surface-tint": "#ae3200",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#704b00",
+                    "surface-container-high": "#ebe7e7",
+                    "tertiary-fixed-dim": "#bdc2ff",
+                    "on-error": "#ffffff",
+                    "on-background": "#1c1b1b",
+                    "on-error-container": "#93000a",
+                    "primary": "#ae3200",
+                    "on-secondary-fixed-variant": "#614000",
+                    "secondary": "#805600",
+                    "on-secondary-fixed": "#281800",
+                    "on-tertiary-fixed": "#000866",
+                    "secondary-fixed-dim": "#ffba43",
+                    "surface-bright": "#fcf9f8",
+                    "surface-variant": "#e5e2e1",
+                    "inverse-surface": "#313030",
+                    "primary-fixed-dim": "#ffb59e",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-dim": "#dcd9d9",
+                    "outline": "#8f7067",
+                    "inverse-primary": "#ffb59e",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fcf9f8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stroke-heavy": "2px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "stroke-thin": "1px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Space Mono"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Playfair Display"],
+                    "headline-lg": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "body-md": ["Hanken Grotesk"],
+                    "label-md": ["Space Mono"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "headline-lg": ["48px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        html { scroll-behavior: smooth; }
+        .steel-line-h { border-bottom: 2px solid #3A3A36; }
+        .steel-line-v { border-right: 2px solid #3A3A36; }
+        .molten-glow { box-shadow: 0 0 15px rgba(174, 50, 0, 0.4); }
+        .stamp { 
+            display: inline-block;
+            border: 1px solid currentColor;
+            padding: 2px 6px;
+            transform: rotate(-1.5deg);
+            white-space: nowrap;
+        }
+        .pressure-line {
+            height: 2px;
+            background: linear-gradient(90deg, #dcd9d9 0%, #ae3200 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fcf9f8; }
+        ::-webkit-scrollbar-thumb { background: #3A3A36; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
+<!-- TopNavBar -->
+<nav class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface dark:bg-surface-dim z-50 docked full-width top-0 border-b-2 border-outline dark:border-outline-variant fixed">
+<div class="font-headline-md text-headline-md font-bold tracking-tighter text-on-surface dark:text-on-surface-variant">NOT / AVERAGE</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#manifesto">Manifesto</a>
+<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Active Forges</a>
+</div>
+<div class="flex items-center gap-3" id="topnav-auth-slot">
+  <a class="bg-tertiary text-white px-6 py-2 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all inline-flex items-center justify-center" href="/auth/google/login">
+              Enter The Forge
+          </a>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Section 1: Hero -->
+<section class="grid grid-cols-12 gap-0 border-b-2 border-on-surface min-h-[819px]">
+<div class="col-span-12 lg:col-span-8 p-margin-desktop flex flex-col justify-center border-r-2 border-on-surface">
+<div class="mb-6">
+<span class="stamp font-label-sm text-primary border-primary">JUNE COHORT / FORGE OPEN</span>
+</div>
+<h1 class="font-display-lg text-display-lg uppercase mb-6 leading-none">
+                    Build what makes you <span class="text-primary">impossible</span> to ignore.
+                </h1>
+<p class="font-body-lg text-body-lg max-w-2xl text-on-surface-variant mb-10">
+                    Not Your Average is a forge for high-agency students. Small pods enter with raw ambition and leave with shipped products, research, hackathons, systems, and proof.
+                </p>
+<div class="flex flex-wrap gap-4">
+<a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center justify-center" href="/auth/google/login">
+                        Enter June Cohort
+                    </a>
+<a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="#active-forges">
+                        View Active Forges
+                    </a>
+</div>
+</div>
+<!-- Forge Status Panel -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-8 flex flex-col gap-8">
+<div class="border-2 border-on-surface p-6 bg-white relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="font-label-sm text-label-sm uppercase mb-4 opacity-60" id="forge-status-state">Status: —</div>
+<div class="font-headline-md text-headline-md mb-2">FORGE STATUS</div>
+<div class="space-y-6 mt-8">
+<div>
+<div class="flex justify-between font-label-sm mb-1">
+<span>HEAT LEVEL</span>
+<span class="text-primary" id="forge-status-heat">—</span>
+</div>
+<div class="w-full bg-surface-dim h-4 border border-on-surface">
+<div class="bg-primary h-full w-[0%]" id="forge-status-heatbar" style="width:0%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="border border-on-surface p-3">
+<div class="font-label-sm opacity-60">POD TRACKS</div>
+<div class="font-label-md font-bold" id="forge-status-pods">—</div>
+</div>
+<div class="border border-on-surface p-3 bg-primary text-white">
+<div class="font-label-sm opacity-80">SEATS LEFT</div>
+<div class="font-label-md font-bold" id="forge-status-seats">—</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-grow border-2 border-dashed border-outline p-6 flex items-center justify-center">
+<div class="text-center">
+<span class="material-symbols-outlined text-4xl mb-2 text-outline">history_edu</span>
+<div class="font-label-sm text-outline uppercase tracking-widest">Archival Record NYA-2026</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Comparison -->
+<section class="py-24 px-margin-desktop border-b-2 border-on-surface bg-surface-container-lowest">
+<div class="mb-16">
+<span class="font-label-sm text-label-sm bg-on-surface text-surface px-2 py-1 uppercase">Metric Comparison</span>
+<h2 class="font-headline-lg text-headline-lg mt-4">Average Waits. NYA Forges.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-24 relative">
+<!-- Average Path -->
+<div class="opacity-40">
+<div class="font-label-md text-label-md mb-8 uppercase tracking-widest">Average Path</div>
+<div class="space-y-12">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">01</div>
+<div class="font-headline-md text-headline-md italic">Courses</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">02</div>
+<div class="font-headline-md text-headline-md italic">Certificates</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">03</div>
+<div class="font-headline-md text-headline-md italic">Resume Lines</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-4xl">hourglass_empty</span>
+<div class="font-headline-md text-headline-md italic">Waiting...</div>
+</div>
+</div>
+</div>
+<!-- NYA Forge -->
+<div class="relative">
+<div class="font-label-md text-label-md mb-8 uppercase tracking-widest text-primary">NYA Forge Flow</div>
+<div class="space-y-12 relative z-10">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">01</div>
+<div class="font-headline-md text-headline-md uppercase font-black">Pods</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">02</div>
+<div class="font-headline-md text-headline-md uppercase font-black">Pressure</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">03</div>
+<div class="font-headline-md text-headline-md uppercase font-black">Proof</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<div class="font-headline-md text-headline-md uppercase font-black text-primary">Public Output</div>
+</div>
+</div>
+<!-- Pressure Line Motif -->
+<div class="absolute -left-12 top-20 bottom-0 w-1 pressure-line"></div>
+</div>
+</div>
+</section>
+<!-- Section 3: The Forge Process -->
+<section class="border-b-2 border-on-surface overflow-hidden">
+<div class="grid grid-cols-1 md:grid-cols-4">
+<div class="p-10 border-r-2 border-on-surface hover:bg-surface-container-high transition-colors">
+<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 01</div>
+<h3 class="font-headline-md text-headline-md mb-4">Raw Input</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Untapped intent and raw technical skill. We filter for obsession over credentials.</p>
+</div>
+<div class="p-10 border-r-2 border-on-surface bg-primary text-white">
+<div class="font-label-sm text-label-sm mb-2 opacity-70">PHASE 02</div>
+<h3 class="font-headline-md text-headline-md mb-4">Pressure</h3>
+<p class="font-body-md text-body-md opacity-90">Tight deadlines, radical accountability, and peer-reviewed shipping cycles.</p>
+</div>
+<div class="p-10 border-r-2 border-on-surface hover:bg-surface-container-high transition-colors">
+<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 03</div>
+<h3 class="font-headline-md text-headline-md mb-4">Formation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Transforming ideas into robust systems, products, and verifiable research.</p>
+</div>
+<div class="p-10 hover:bg-surface-container-high transition-colors">
+<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 04</div>
+<h3 class="font-headline-md text-headline-md mb-4">Proof</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Live demos, published papers, and artifacts that command attention.</p>
+</div>
+</div>
+</section>
+<!-- Section 4: Active Forges -->
+<section class="py-24 px-margin-desktop bg-surface-dim" id="active-forges">
+<div class="flex justify-between items-end mb-16">
+<div>
+<h2 class="font-headline-lg text-headline-lg uppercase">Active Forges</h2>
+<p class="font-label-md text-label-md text-on-surface-variant mt-2 uppercase">Current production environments</p>
+</div>
+<div class="hidden md:block">
+<span class="stamp font-label-sm border-on-surface" id="active-forges-updated">UPDATED: 2024-06-12</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="active-forges-grid" data-source="/api/forges">
+<!-- Card 1 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="absolute top-4 right-4"><span class="stamp font-label-sm text-primary border-primary">CRITICAL</span></div>
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F01</div>
+<h4 class="font-headline-md text-headline-md mb-6">FindMe</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span class="text-primary font-bold">MAX</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>01/12</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">Consumer App</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors">Request Access</button>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="absolute top-4 right-4"><span class="stamp font-label-sm text-secondary border-secondary">WARM</span></div>
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F02</div>
+<h4 class="font-headline-md text-headline-md mb-6">EvalTrust</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span>STEADY</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>03/10</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">Audit Engine</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors">Request Access</button>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F03</div>
+<h4 class="font-headline-md text-headline-md mb-6">Research Div</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span>INTENSE</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>LOCKED</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">Whitepaper</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold opacity-30 cursor-not-allowed">Waitlist Only</button>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F04</div>
+<h4 class="font-headline-md text-headline-md mb-6">Hackathon Engine</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span class="text-primary font-bold">BURST</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>08/20</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">48hr Sprints</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors">Request Access</button>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F05</div>
+<h4 class="font-headline-md text-headline-md mb-6">Internal Tools</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span>LOW</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>05/15</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">NYA Systems</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors">Request Access</button>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform">
+<div class="font-label-sm opacity-50 mb-1">ID: NYA-F06</div>
+<h4 class="font-headline-md text-headline-md mb-6">Client Systems</h4>
+<div class="space-y-4 border-t border-outline-variant pt-4">
+<div class="flex justify-between font-label-sm"><span>HEAT LEVEL:</span><span>HIGH</span></div>
+<div class="flex justify-between font-label-sm"><span>OPEN SEATS:</span><span>02/06</span></div>
+<div class="flex justify-between font-label-sm"><span>OUTPUT:</span><span class="uppercase">Real Deployment</span></div>
+</div>
+<button class="w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors">Request Access</button>
+</div>
+</div>
+</section>
+<!-- Section 5: The Forge Gate -->
+<section class="py-24 px-margin-desktop border-y-2 border-on-surface bg-background">
+<h2 class="font-display-lg text-display-lg uppercase text-center mb-24">The Forge Gate</h2>
+<div class="max-w-4xl mx-auto space-y-0 border-l-2 border-on-surface">
+<div class="relative pl-12 pb-16">
+<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
+<h3 class="font-headline-md text-headline-md uppercase mb-2">Submit Profile</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Prove you have skin in the game. Send us your Github, papers, or proof-of-work.</p>
+</div>
+<div class="relative pl-12 pb-16">
+<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
+<h3 class="font-headline-md text-headline-md uppercase mb-2">Intent Review</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Direct interrogation of your ambition. We filter out certificate seekers.</p>
+</div>
+<div class="relative pl-12 pb-16">
+<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
+<h3 class="font-headline-md text-headline-md uppercase mb-2">Skill Sync</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Peer-matching for technical and philosophical alignment within pods.</p>
+</div>
+<div class="relative pl-12 pb-16">
+<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
+<h3 class="font-headline-md text-headline-md uppercase mb-2">Pod Allocation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Placement into a specific forge based on current heat and seat availability.</p>
+</div>
+<div class="relative pl-12">
+<div class="absolute left-[-9px] top-0 w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+<h3 class="font-headline-md text-headline-md uppercase text-primary mb-2">Forge Sprint Begins</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Total immersion. 8 weeks of high-pressure output.</p>
+</div>
+</div>
+</section>
+<!-- Section 6: Manifesto -->
+<section class="py-32 px-margin-desktop bg-on-surface text-surface flex items-center justify-center text-center overflow-hidden relative" id="manifesto">
+<!-- Background Decorative Texture -->
+<div class="absolute inset-0 opacity-10 pointer-events-none select-none overflow-hidden">
+<div class="text-[200px] font-black leading-none opacity-20 rotate-12 -translate-y-20">NOT AVERAGE</div>
+</div>
+<div class="max-w-5xl relative z-10">
+<blockquote class="font-headline-lg text-headline-lg md:text-[64px] leading-tight space-y-4">
+<p>No passive members.</p>
+<p>No certificate hunters.</p>
+<p>No average execution.</p>
+<p class="text-primary-container"><span class="bg-primary px-4 py-2 text-white italic">Pressure creates proof.</span></p>
+</blockquote>
+<div class="mt-16 flex flex-col items-center gap-6">
+<div class="w-24 h-2 bg-primary"></div>
+<span class="font-label-sm tracking-[0.5em] opacity-60">SIGNED: THE COUNCIL OF THE FORGE</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="grid grid-cols-1 md:grid-cols-4 gap-gutter w-full px-margin-desktop py-12 bg-surface-container-highest border-t-2 border-on-surface">
+<div class="col-span-1">
+<div class="font-label-md text-label-md font-bold text-on-surface mb-4">NOT / AVERAGE</div>
+<p class="font-label-sm text-label-sm opacity-60">A student-run production environment for high-agency engineers and researchers.</p>
+</div>
+<div class="col-span-1 space-y-2">
+<div class="font-label-sm font-bold opacity-40 uppercase">Locations</div>
+<a class="block font-label-md text-label-md hover:underline" href="#">LOCATION: UNKNOWN</a>
+<a class="block font-label-md text-label-md hover:underline" href="#">NODE: NY-01</a>
+</div>
+<div class="col-span-1 space-y-2">
+<div class="font-label-sm font-bold opacity-40 uppercase">Status</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="font-label-md text-label-md">STATUS: FORGING</span>
+</div>
+<span class="block font-label-md text-label-md">PROTOCOL: 00-1B</span>
+</div>
+<div class="col-span-1 text-right">
+<div class="font-label-sm text-label-sm mb-4">© ARCHIVAL RECORD NYA-2026</div>
+<div class="flex justify-end gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">terminal</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">shield</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">history</span>
+</div>
+</div>
+</footer>
+<script>
+        // Forge Status: fetch real-time data from backend and update periodically.
+        const forgeStatusEls = {
+            state: document.getElementById('forge-status-state'),
+            heat: document.getElementById('forge-status-heat'),
+            heatbar: document.getElementById('forge-status-heatbar'),
+            pods: document.getElementById('forge-status-pods'),
+            seats: document.getElementById('forge-status-seats'),
+        };
+        let forgeStatusHasBackend = false;
+
+        const pad2 = (n) => String(n).padStart(2, '0');
+        const clamp01 = (n) => Math.min(Math.max(n, 0), 100);
+
+        const applyForgeStatus = (data) => {
+            if (!data || !data.available) {
+                if (forgeStatusEls.state) forgeStatusEls.state.textContent = 'Status: —';
+                if (forgeStatusEls.heat) forgeStatusEls.heat.textContent = '—';
+                if (forgeStatusEls.heatbar) forgeStatusEls.heatbar.style.width = '0%';
+                if (forgeStatusEls.pods) forgeStatusEls.pods.textContent = '—';
+                if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = '—';
+                return false;
+            }
+            const heatPercent = Number(data.heat_percent);
+            if (!Number.isFinite(heatPercent)) return false;
+
+            const statusText = String(data.status || 'Active');
+            const heatLabel = String(data.heat_label || '').toUpperCase();
+            const podsActive = Number(data.pod_tracks_active);
+            const seatsLeft = Number(data.seats_left);
+
+            if (forgeStatusEls.state) forgeStatusEls.state.textContent = `Status: ${statusText}`;
+            if (forgeStatusEls.heat) forgeStatusEls.heat.textContent = `${Math.round(heatPercent)}% — ${heatLabel || '—'}`;
+            if (forgeStatusEls.heatbar) forgeStatusEls.heatbar.style.width = `${clamp01(heatPercent)}%`;
+            if (forgeStatusEls.pods && Number.isFinite(podsActive)) forgeStatusEls.pods.textContent = `${podsActive} ACTIVE`;
+            if (forgeStatusEls.seats && Number.isFinite(seatsLeft)) forgeStatusEls.seats.textContent = `${pad2(seatsLeft)} REMAIN`;
+            return true;
+        };
+
+        let forgeStatusPollTimer = null;
+        const fetchForgeStatus = async () => {
+            if (window.location && window.location.protocol === 'file:') return;
+            try {
+                const res = await fetch('/api/forge-status', { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) return;
+                const data = await res.json();
+                const applied = applyForgeStatus(data);
+                forgeStatusHasBackend = forgeStatusHasBackend || applied;
+            } catch (_) {
+                // keep static fallback
+            }
+        };
+
+        const startPollingForgeStatus = () => {
+            if (forgeStatusPollTimer) return;
+            fetchForgeStatus();
+            forgeStatusPollTimer = setInterval(fetchForgeStatus, 5000);
+        };
+
+        const startSseForgeStatus = () => {
+            if (window.location && window.location.protocol === 'file:') return false;
+            if (!('EventSource' in window)) return false;
+
+            try {
+                const es = new EventSource('/api/events/forge-status');
+
+                es.addEventListener('forge_status', (ev) => {
+                    try {
+                        const data = JSON.parse(ev.data || '{}');
+                        const applied = applyForgeStatus(data);
+                        forgeStatusHasBackend = forgeStatusHasBackend || applied;
+                    } catch (_) {
+                        // ignore parse errors
+                    }
+                });
+
+                es.onerror = () => {
+                    try { es.close(); } catch (_) {}
+                    startPollingForgeStatus();
+                };
+
+                return true;
+            } catch (_) {
+                return false;
+            }
+        };
+
+        if (!startSseForgeStatus()) startPollingForgeStatus();
+
+        // No fake animation: when backend is empty/unavailable we show placeholders.
+
+        // Add "Stamp" random rotation
+        document.querySelectorAll('.stamp').forEach(stamp => {
+            const rot = (Math.random() * 4 - 2).toFixed(1);
+            stamp.style.transform = `rotate(${rot}deg)`;
+        });
+
+        // TopNav auth slot: show Profile + Logout for non-admin users on the landing page.
+        (async () => {
+            const slot = document.getElementById('topnav-auth-slot');
+            if (!slot) return;
+            if (window.location && window.location.protocol === 'file:') return;
+
+            try {
+                const meRes = await fetch('/api/me', { headers: { 'Accept': 'application/json' } });
+                if (!meRes.ok) return;
+                const me = await meRes.json();
+                if (!me || !me.authenticated) return;
+
+                // If admin, keep the existing CTA (admin can use /admin/dashboard).
+                if (me.role === 'admin') return;
+
+                slot.innerHTML = '';
+
+                const profile = document.createElement('a');
+                profile.className = 'border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center';
+                profile.href = '/candidate/profile';
+                profile.textContent = 'Profile';
+
+                const logoutBtn = document.createElement('button');
+                logoutBtn.className = 'border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors';
+                logoutBtn.type = 'button';
+                logoutBtn.textContent = 'Logout';
+
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        const csrfRes = await fetch('/api/csrf', { headers: { 'Accept': 'application/json' } });
+                        if (!csrfRes.ok) return;
+                        const { csrf_token } = await csrfRes.json();
+                        await fetch('/auth/logout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': csrf_token },
+                            body: 'csrf_token=' + encodeURIComponent(csrf_token),
+                        });
+                        window.location.href = '/';
+                    } catch (_) {
+                        // ignore
+                    }
+                });
+
+                slot.appendChild(profile);
+                slot.appendChild(logoutBtn);
+            } catch (_) {
+                // ignore
+            }
+        })();
+
+        // Active Forges: fetch from backend (MongoDB) and replace cards if available.
+        (async () => {
+            const grid = document.getElementById('active-forges-grid');
+            if (!grid) return;
+            const endpoint = grid.getAttribute('data-source') || '/api/forges';
+            if (window.location && window.location.protocol === 'file:') {
+                console.warn('[Active Forges] Opened via file:// — start the FastAPI server and visit http://localhost:8000/ for backend fetching.');
+                return;
+            }
+
+            try {
+                const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) {
+                    console.warn('[Active Forges] Backend returned', res.status);
+                    return;
+                }
+                const items = await res.json();
+                if (!Array.isArray(items)) return;
+
+                // If backend is empty, replace static cards with an empty-state message.
+                if (items.length === 0) {
+                    // If there are no forges, show published jobs here instead.
+                    try {
+                        const jobsRes = await fetch('/api/jobs', { headers: { 'Accept': 'application/json' } });
+                        if (jobsRes.ok) {
+                            const jobs = await jobsRes.json();
+                            if (Array.isArray(jobs) && jobs.length > 0) {
+                                grid.innerHTML = '';
+
+                                const updatedEl = document.getElementById('active-forges-updated');
+                                if (updatedEl) {
+                                    const latest = jobs
+                                        .map(x => x && x.updated_at ? new Date(x.updated_at) : null)
+                                        .filter(Boolean)
+                                        .sort((a, b) => b - a)[0];
+                                    if (latest && !Number.isNaN(latest.getTime())) {
+                                        const y = latest.getFullYear();
+                                        const m = String(latest.getMonth() + 1).padStart(2, '0');
+                                        const d = String(latest.getDate()).padStart(2, '0');
+                                        updatedEl.textContent = `UPDATED: ${y}-${m}-${d}`;
+                                    }
+                                }
+
+                                const makeJobCard = (j) => {
+                                    const card = document.createElement('a');
+                                    card.className = 'bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform block';
+                                    card.href = `/jobs/${encodeURIComponent(String(j.id || ''))}`;
+
+                                    const id = document.createElement('div');
+                                    id.className = 'font-label-sm opacity-50 mb-1';
+                                    id.textContent = 'TYPE: JOB';
+                                    card.appendChild(id);
+
+                                    const title = document.createElement('h4');
+                                    title.className = 'font-headline-md text-headline-md mb-6';
+                                    title.textContent = String(j.title || '');
+                                    card.appendChild(title);
+
+                                    const body = document.createElement('div');
+                                    body.className = 'space-y-4 border-t border-outline-variant pt-4';
+
+                                    const row = (label, value) => {
+                                        const r = document.createElement('div');
+                                        r.className = 'flex justify-between font-label-sm';
+                                        const l = document.createElement('span');
+                                        l.textContent = label;
+                                        const v = document.createElement('span');
+                                        v.textContent = value;
+                                        r.appendChild(l);
+                                        r.appendChild(v);
+                                        return r;
+                                    };
+
+                                    body.appendChild(row('COMPANY:', String(j.company_or_team || 'â€”')));
+                                    body.appendChild(row('LOCATION:', String(j.location || 'â€”')));
+                                    body.appendChild(row('TYPE:', String(j.job_type || 'â€”').toUpperCase()));
+                                    card.appendChild(body);
+
+                                    const btn = document.createElement('div');
+                                    btn.className = 'w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors text-center';
+                                    btn.textContent = 'View Job';
+                                    card.appendChild(btn);
+
+                                    return card;
+                                };
+
+                                jobs.forEach((j) => {
+                                    if (!j || !j.id) return;
+                                    grid.appendChild(makeJobCard(j));
+                                });
+
+                                return;
+                            }
+                        }
+                    } catch (_) {
+                        // fall through to empty state
+                    }
+
+                    grid.innerHTML = '';
+                    const empty = document.createElement('div');
+                    empty.className = 'bg-surface border-2 border-on-surface p-10';
+                    const k = document.createElement('div');
+                    k.className = 'font-label-sm opacity-50 mb-2';
+                    k.textContent = 'STATUS';
+                    const h = document.createElement('div');
+                    h.className = 'font-headline-md text-headline-md uppercase mb-2';
+                    h.textContent = 'No Active Forge yet';
+                    const p = document.createElement('p');
+                    p.className = 'font-body-md text-body-md text-on-surface-variant';
+                    p.textContent = 'When new forges are published, they’ll appear here.';
+                    empty.appendChild(k);
+                    empty.appendChild(h);
+                    empty.appendChild(p);
+                    // Make it span the grid.
+                    empty.style.gridColumn = '1 / -1';
+                    grid.appendChild(empty);
+
+                    const updatedEl = document.getElementById('active-forges-updated');
+                    if (updatedEl) updatedEl.textContent = 'UPDATED: —';
+                    return;
+                }
+
+                const updatedEl = document.getElementById('active-forges-updated');
+                if (updatedEl) {
+                    const latest = items
+                        .map(x => x && x.updated_at ? new Date(x.updated_at) : null)
+                        .filter(Boolean)
+                        .sort((a, b) => b - a)[0];
+                    if (latest && !Number.isNaN(latest.getTime())) {
+                        const y = latest.getFullYear();
+                        const m = String(latest.getMonth() + 1).padStart(2, '0');
+                        const d = String(latest.getDate()).padStart(2, '0');
+                        updatedEl.textContent = `UPDATED: ${y}-${m}-${d}`;
+                    }
+                }
+
+                // Replace existing static cards (kept as fallback if API fails).
+                grid.innerHTML = '';
+
+                const makeCard = (f) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-surface border-2 border-on-surface p-8 relative hover:-translate-y-1 transition-transform';
+
+                    if (f.badge_text) {
+                        const badgeWrap = document.createElement('div');
+                        badgeWrap.className = 'absolute top-4 right-4';
+                        const badge = document.createElement('span');
+                        badge.className = 'stamp font-label-sm';
+                        if (f.badge_tone === 'primary') badge.classList.add('text-primary', 'border-primary');
+                        else if (f.badge_tone === 'secondary') badge.classList.add('text-secondary', 'border-secondary');
+                        else badge.classList.add('border-on-surface');
+                        badge.textContent = String(f.badge_text);
+                        badgeWrap.appendChild(badge);
+                        card.appendChild(badgeWrap);
+                    }
+
+                    const id = document.createElement('div');
+                    id.className = 'font-label-sm opacity-50 mb-1';
+                    id.textContent = `ID: ${String(f.forge_id || '').toUpperCase()}`;
+                    card.appendChild(id);
+
+                    const title = document.createElement('h4');
+                    title.className = 'font-headline-md text-headline-md mb-6';
+                    title.textContent = String(f.name || '');
+                    card.appendChild(title);
+
+                    const body = document.createElement('div');
+                    body.className = 'space-y-4 border-t border-outline-variant pt-4';
+
+                    const row = (label, value, valueClass) => {
+                        const r = document.createElement('div');
+                        r.className = 'flex justify-between font-label-sm';
+                        const l = document.createElement('span');
+                        l.textContent = label;
+                        const v = document.createElement('span');
+                        if (valueClass) v.className = valueClass;
+                        v.textContent = value;
+                        r.appendChild(l);
+                        r.appendChild(v);
+                        return r;
+                    };
+
+                    body.appendChild(row('HEAT LEVEL:', String(f.heat_level || ''), (String(f.heat_level || '').toUpperCase() === 'MAX') ? 'text-primary font-bold' : ''));
+                    body.appendChild(row('OPEN SEATS:', String(f.open_seats_text || ''), ''));
+                    body.appendChild(row('OUTPUT:', String(f.output || '').toUpperCase(), 'uppercase'));
+                    card.appendChild(body);
+
+                    const btn = document.createElement('button');
+                    btn.className = 'w-full mt-8 py-3 border border-on-surface font-label-sm uppercase font-bold transition-colors';
+                    if (f.access_state === 'waitlist_only' || f.access_state === 'locked') {
+                        btn.textContent = (f.access_state === 'locked') ? 'Locked' : 'Waitlist Only';
+                        btn.classList.add('opacity-30', 'cursor-not-allowed');
+                        btn.disabled = true;
+                    } else {
+                        btn.textContent = 'Request Access';
+                        btn.classList.add('hover:bg-on-surface', 'hover:text-white');
+                    }
+                    card.appendChild(btn);
+
+                    return card;
+                };
+
+                items.forEach((f) => {
+                    if (!f) return;
+                    grid.appendChild(makeCard(f));
+                });
+
+                // Re-apply stamp micro-rotation for new nodes
+                document.querySelectorAll('.stamp').forEach(stamp => {
+                    const rot = (Math.random() * 4 - 2).toFixed(1);
+                    stamp.style.transform = `rotate(${rot}deg)`;
+                });
+            } catch (_) {
+                // Keep the static HTML if anything fails.
+                console.warn('[Active Forges] Fetch failed; showing static fallback.');
+            }
+        })();
+    </script>
+</body></html>

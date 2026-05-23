@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+        <div>
+          <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+          <h1 class="font-headline-lg text-headline-lg mt-4">Submissions</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2">Review applications and export responses.</p>
+        </div>
+        <a
+          class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors"
+          href="/admin/submissions/download{% if selected_job_id %}?job_id={{ selected_job_id }}{% endif %}"
+          >Download all</a
+        >
+      </div>
+
+      <form method="get" action="/admin/submissions" class="bg-surface border-2 border-on-surface p-6 mb-8 flex flex-wrap gap-4 items-end">
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="job_id">Filter by job</label>
+          <select class="border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="job_id" name="job_id">
+            <option value="">All jobs</option>
+            {% for j in job_options %}
+              <option value="{{ j.id }}" {% if selected_job_id == j.id %}selected{% endif %}>{{ j.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button class="bg-tertiary text-white px-6 py-3 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all" type="submit">
+          Apply filter
+        </button>
+      </form>
+
+      <div class="bg-surface border-2 border-on-surface overflow-auto">
+        <table class="w-full text-left">
+          <thead class="border-b-2 border-on-surface bg-surface-container-low">
+            <tr class="font-label-sm uppercase">
+              <th class="p-4">Job</th>
+              <th class="p-4">Candidate</th>
+              <th class="p-4">Email</th>
+              <th class="p-4">Phone</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Submitted</th>
+              <th class="p-4">View</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in applications %}
+              <tr class="border-b border-outline-variant">
+                <td class="p-4">{{ a._job_title or a.job_id }}</td>
+                <td class="p-4 font-label-md">{{ a.candidate_name }}</td>
+                <td class="p-4">{{ a.candidate_email }}</td>
+                <td class="p-4">{{ a.candidate_phone }}</td>
+                <td class="p-4">
+                  <span class="stamp font-label-sm border-on-surface">{{ a.status }}</span>
+                </td>
+                <td class="p-4">{{ a.created_at }}</td>
+                <td class="p-4">
+                  <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" href="/admin/applications/{{ a._id }}">View</a>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if not applications %}
+              <tr>
+                <td class="p-8" colspan="7">No submissions yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+{% endblock %}

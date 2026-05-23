@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-xl mx-auto">
+      <div class="mb-6">
+        <span class="stamp font-label-sm border-on-surface">PROFILE</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg mb-4">Your profile</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Login email is locked:
+        <span class="font-label-md font-bold">{{ user.login_email }}</span>.
+      </p>
+
+      {% if request.query_params.get("saved") %}
+        <div class="mt-8 border-2 border-on-surface bg-surface-container-low p-4">
+          <div class="font-label-md font-bold">Saved.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Your profile has been updated.</div>
+        </div>
+      {% endif %}
+      {% if request.query_params.get("error") %}
+        <div class="mt-8 border-2 border-on-surface bg-error-container p-4">
+          <div class="font-label-md font-bold">Couldn’t update profile.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">{{ request.query_params.get("error") }}</div>
+        </div>
+      {% endif %}
+
+      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-6" method="post" action="/candidate/profile">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="name">Name</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="name"
+            name="name"
+            required
+            minlength="2"
+            maxlength="120"
+            placeholder="Your full name"
+            value="{{ user.name or '' }}"
+          />
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="phone_number">Phone number</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="phone_number"
+            name="phone_number"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]{10,15}"
+            minlength="10"
+            maxlength="15"
+            required
+            placeholder="10–15 digits"
+            onkeydown="if(['e','E','+','-','.',','].includes(event.key)) event.preventDefault();"
+            oninput="this.value=this.value.replace(/\\D/g,'').slice(0,15)"
+            value="{{ user.phone_number or '' }}"
+          />
+          <div class="font-label-sm text-label-sm opacity-60 mt-2">Digits only (10–15).</div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="alternate_email"
+            name="alternate_email"
+            type="email"
+            required
+            placeholder="personal@gmail.com"
+            value="{{ user.alternate_email or '' }}"
+          />
+        </div>
+        <button
+          class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform"
+          type="submit"
+        >
+          Update profile
+        </button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

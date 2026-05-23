@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+        <div>
+          <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+          <h1 class="font-headline-lg text-headline-lg mt-4">Responses</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+            Job: <span class="font-label-md font-bold">{{ job.title }}</span>
+          </p>
+        </div>
+        <a
+          class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors"
+          href="/admin/submissions/download?job_id={{ job._id }}"
+          >Download CSV</a
+        >
+      </div>
+
+      <div class="bg-surface border-2 border-on-surface overflow-auto">
+        <table class="w-full text-left">
+          <thead class="border-b-2 border-on-surface bg-surface-container-low">
+            <tr class="font-label-sm uppercase">
+              <th class="p-4">Candidate</th>
+              <th class="p-4">Email</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Submitted</th>
+              <th class="p-4">Open</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in applications %}
+              <tr class="border-b border-outline-variant">
+                <td class="p-4 font-label-md">{{ a.candidate_name or "—" }}</td>
+                <td class="p-4">{{ a.candidate_email or "—" }}</td>
+                <td class="p-4"><span class="stamp font-label-sm border-on-surface">{{ a.status }}</span></td>
+                <td class="p-4">{{ a.created_at or "—" }}</td>
+                <td class="p-4">
+                  <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" href="/admin/applications/{{ a._id }}">View</a>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if not applications %}
+              <tr>
+                <td class="p-8" colspan="5">No responses yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+

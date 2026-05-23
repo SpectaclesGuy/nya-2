@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-16">
+    <div class="max-w-6xl">
+      <div class="mb-10">
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+        <h1 class="font-headline-lg text-headline-lg mt-4">Stats</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Job: <span class="font-label-md font-bold">{{ job.title }}</span>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-surface border-2 border-on-surface p-6">
+          <div class="font-label-sm opacity-50 uppercase mb-2">Total</div>
+          <div class="font-headline-md text-headline-md">{{ total_apps }}</div>
+        </div>
+        {% for k, v in status_counts.items() %}
+          <div class="bg-surface border-2 border-on-surface p-6">
+            <div class="font-label-sm opacity-50 uppercase mb-2">{{ k }}</div>
+            <div class="font-headline-md text-headline-md">{{ v }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-10 space-y-8">
+        {% for qs in q_stats %}
+          <div class="bg-surface border-2 border-on-surface p-8">
+            <div class="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <div class="font-headline-md text-headline-md">{{ qs.title }}</div>
+                <div class="font-label-sm opacity-50 uppercase mt-2">{{ qs.type }}</div>
+              </div>
+            </div>
+
+            {% if qs.type == "text" %}
+              <div class="mt-6 font-body-md text-body-md text-on-surface-variant">Responses: {{ qs.count }}</div>
+              {% if qs.samples %}
+                <div class="mt-6 border-t border-outline-variant pt-6 space-y-3">
+                  {% for t in qs.samples %}
+                    <div class="border border-outline-variant p-4 whitespace-pre-wrap">{{ t }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% else %}
+              <div class="mt-6 border-t border-outline-variant pt-6 space-y-3">
+                {% for d in qs.distribution %}
+                  <div class="flex items-center justify-between gap-6">
+                    <div class="font-body-md text-body-md">{{ d.option }}</div>
+                    <div class="font-label-md font-bold">{{ d.count }} ({{ "%.1f"|format(d.pct) }}%)</div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        {% if not q_stats %}
+          <div class="bg-surface border-2 border-on-surface p-10">
+            <div class="font-headline-md text-headline-md uppercase mb-2">No questions</div>
+            <p class="font-body-md text-body-md text-on-surface-variant">Add questions under Manage Jobs → Questions.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
+

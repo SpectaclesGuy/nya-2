@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-4xl mx-auto">
+      <div class="mb-6">
+        <span class="stamp font-label-sm text-primary border-primary">CANDIDATE</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg mb-4">Dashboard</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Logged in as <span class="font-label-md font-bold">{{ user.login_email }}</span>.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/jobs">
+          <div class="font-label-sm opacity-50 mb-1">ACTION</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">Browse Jobs</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">View published opportunities and apply.</div>
+        </a>
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/candidate/profile">
+          <div class="font-label-sm opacity-50 mb-1">PROFILE</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">Update Profile</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Edit your details anytime.</div>
+        </a>
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/candidate/applications">
+          <div class="font-label-sm opacity-50 mb-1">TRACK</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">My Applications</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">View submitted answers and status.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

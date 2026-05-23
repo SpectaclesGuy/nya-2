@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-16">
+    <div class="max-w-xl">
+      <div class="mb-6">
+        <span class="stamp font-label-sm text-primary border-primary">REQUIRED</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg mb-4">Complete your profile</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        You must complete this once before applying. Your login email is locked:
+        <span class="font-label-md font-bold">{{ user.login_email }}</span>.
+      </p>
+
+      {% if request.query_params.get("error") %}
+        <div class="mt-6 border-2 border-on-surface bg-error-container p-4">
+          <div class="font-label-md font-bold">Couldn’t save profile.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">
+            {% if request.query_params.get("error") == "csrf" %}
+              Please refresh and try again.
+            {% elif request.query_params.get("error") == "db" %}
+              Database is not configured. Set <span class="font-label-md">MONGODB_URI</span> and restart.
+            {% elif request.query_params.get("error") == "validation" %}
+              Check the fields and try again.
+            {% else %}
+              Please try again.
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-6" method="post" action="/candidate/complete-profile">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="name">Name</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="name"
+            name="name"
+            required
+            minlength="2"
+            maxlength="120"
+            placeholder="Your full name"
+            value="{{ user.name or '' }}"
+          />
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="phone_number">Phone number</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="phone_number"
+            name="phone_number"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]{10,15}"
+            minlength="10"
+            maxlength="15"
+            required
+            placeholder="10–15 digits"
+            oninput="this.value=this.value.replace(/\\D/g,'').slice(0,15)"
+          />
+          <div class="font-label-sm text-label-sm opacity-60 mt-2">Digits only (10–15).</div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email</label>
+          <input
+            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+            id="alternate_email"
+            name="alternate_email"
+            type="email"
+            required
+            placeholder="personal@gmail.com"
+          />
+        </div>
+        <button
+          class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform"
+          type="submit"
+        >
+          Save profile
+        </button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto">
+      <div class="mb-6"><span class="stamp font-label-sm border-on-surface">APPLY</span></div>
+      <h1 class="font-headline-lg text-headline-lg mb-2">{{ job.title }}</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">{{ job.company_or_team }} · {{ job.location }} · {{ job.job_type }}</p>
+
+      {% if request.query_params.get("error") %}
+        <div class="mt-8 border-2 border-on-surface bg-error-container p-4">
+          <div class="font-label-md font-bold">Submission failed.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">{{ request.query_params.get("error") }}</div>
+        </div>
+      {% endif %}
+
+      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-8" method="post" action="/jobs/{{ job._id }}/apply" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="resume">Resume (PDF, max 5MB)</label>
+          <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="resume" name="resume" type="file" accept="application/pdf,.pdf" required />
+        </div>
+
+        {% for q in (job.questions or [])|sort(attribute='order') %}
+          <div class="border border-outline-variant p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="font-headline-md text-headline-md">{{ q.title }}</div>
+                {% if q.help_text %}
+                  <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ q.help_text }}</div>
+                {% endif %}
+              </div>
+              {% if q.required %}
+                <span class="stamp font-label-sm text-primary border-primary">REQUIRED</span>
+              {% endif %}
+            </div>
+
+            <div class="mt-6">
+              {% if q.question_type == "text" %}
+                <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[120px]" name="q_{{ q.question_id }}" {% if q.required %}required{% endif %}></textarea>
+              {% elif q.question_type == "single_choice" %}
+                <div class="space-y-3">
+                  {% for opt in (q.options or []) %}
+                    <label class="flex items-center gap-3 font-body-md text-body-md">
+                      <input type="radio" name="q_{{ q.question_id }}" value="{{ opt }}" {% if q.required %}required{% endif %} />
+                      <span>{{ opt }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              {% elif q.question_type == "multiple_choice" %}
+                <div class="space-y-3">
+                  {% for opt in (q.options or []) %}
+                    <label class="flex items-center gap-3 font-body-md text-body-md">
+                      <input type="checkbox" name="q_{{ q.question_id }}" value="{{ opt }}" />
+                      <span>{{ opt }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+        <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
+          Submit application
+        </button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

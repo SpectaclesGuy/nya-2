@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-6">
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg mb-4">Admin Dashboard</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Signed in as <span class="font-label-md font-bold">{{ user.login_email }}</span>.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/admin/jobs">
+          <div class="font-label-sm opacity-50 mb-1">MANAGE</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">Jobs</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Create, publish, and close postings.</div>
+        </a>
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/admin/submissions">
+          <div class="font-label-sm opacity-50 mb-1">REVIEW</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">Submissions</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Review applications and export CSV.</div>
+        </a>
+        <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/admin/users">
+          <div class="font-label-sm opacity-50 mb-1">CONTROL</div>
+          <div class="font-headline-md text-headline-md mb-2 uppercase">Users</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">Grant or revoke admin access.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

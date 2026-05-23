@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{{ page_title or "NOT / AVERAGE — Portal" }}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;500;700&family=Hanken+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f6f3f2",
+              "outline-variant": "#e4beb3",
+              "primary-fixed": "#ffdbd0",
+              "secondary-fixed": "#ffddaf",
+              "on-surface": "#1c1b1b",
+              "on-tertiary-fixed-variant": "#001de0",
+              "secondary-container": "#ffba43",
+              "tertiary-container": "#7a87ff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-container": "#541400",
+              "surface-container-highest": "#e5e2e1",
+              tertiary: "#2a3fff",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#5b4038",
+              "primary-container": "#ff5a1f",
+              "on-primary-fixed-variant": "#852400",
+              "on-tertiary-container": "#000f91",
+              "tertiary-fixed": "#dfe0ff",
+              "on-primary-fixed": "#3a0b00",
+              error: "#ba1a1a",
+              "surface-container": "#f0edec",
+              background: "#fcf9f8",
+              "surface-tint": "#ae3200",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#704b00",
+              "surface-container-high": "#ebe7e7",
+              "tertiary-fixed-dim": "#bdc2ff",
+              "on-error": "#ffffff",
+              "on-background": "#1c1b1b",
+              "on-error-container": "#93000a",
+              primary: "#ae3200",
+              "on-secondary-fixed-variant": "#614000",
+              secondary: "#805600",
+              "on-secondary-fixed": "#281800",
+              "on-tertiary-fixed": "#000866",
+              "secondary-fixed-dim": "#ffba43",
+              "surface-bright": "#fcf9f8",
+              "surface-variant": "#e5e2e1",
+              "inverse-surface": "#313030",
+              "primary-fixed-dim": "#ffb59e",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ef",
+              "surface-dim": "#dcd9d9",
+              outline: "#8f7067",
+              "inverse-primary": "#ffb59e",
+              "on-secondary": "#ffffff",
+              surface: "#fcf9f8",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            spacing: {
+              unit: "4px",
+              "stroke-heavy": "2px",
+              "margin-mobile": "20px",
+              "margin-desktop": "64px",
+              gutter: "24px",
+              "stroke-thin": "1px",
+            },
+            fontFamily: {
+              "label-sm": ["Space Mono"],
+              "headline-lg-mobile": ["Playfair Display"],
+              "body-lg": ["Hanken Grotesk"],
+              "headline-md": ["Playfair Display"],
+              "headline-lg": ["Playfair Display"],
+              "display-lg": ["Playfair Display"],
+              "body-md": ["Hanken Grotesk"],
+              "label-md": ["Space Mono"],
+            },
+            fontSize: {
+              "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "400" }],
+              "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+              "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+              "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "700" }],
+              "headline-lg": ["48px", { lineHeight: "1.2", fontWeight: "700" }],
+              "display-lg": ["72px", { lineHeight: "0.95", fontWeight: "900" }],
+              "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+              "label-md": ["14px", { lineHeight: "1.2", fontWeight: "500" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .steel-line-h {
+        border-bottom: 2px solid #3a3a36;
+      }
+      .steel-line-v {
+        border-right: 2px solid #3a3a36;
+      }
+      .molten-glow {
+        box-shadow: 0 0 15px rgba(174, 50, 0, 0.4);
+      }
+      .stamp {
+        display: inline-block;
+        border: 1px solid currentColor;
+        padding: 0.25rem 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fcf9f8;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3a3a36;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
+    <nav
+      class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface z-50 full-width top-0 border-b-2 border-outline fixed"
+    >
+      <a class="font-headline-md text-headline-md font-bold tracking-tighter" href="/">NOT / AVERAGE</a>
+      <div class="hidden md:flex gap-8 items-center">
+        {% if user and user.role == "admin" %}
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
+          >Public Jobs</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/dashboard"
+          >Admin</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/users"
+          >Users</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/jobs"
+          >Manage Jobs</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/submissions"
+          >Submissions</a
+        >
+        {% elif user %}
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
+          >Jobs</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/candidate/dashboard"
+          >Dashboard</a
+        >
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/candidate/profile"
+          >Update Profile</a
+        >
+        {% else %}
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
+          >Jobs</a
+        >
+        {% endif %}
+      </div>
+      <div class="flex items-center gap-3">
+        {% if user %}
+        <form action="/auth/logout" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+          <button
+            class="border-2 border-on-surface bg-surface px-6 py-2 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors"
+            type="submit"
+          >
+            Logout
+          </button>
+        </form>
+        {% else %}
+        <a
+          class="bg-tertiary text-white px-6 py-2 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all"
+          href="/auth/google/login"
+          >Continue with Google</a
+        >
+        {% endif %}
+      </div>
+    </nav>
+    <main class="pt-24 px-margin-desktop">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

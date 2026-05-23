@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+        <div>
+          <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+          <h1 class="font-headline-lg text-headline-lg mt-4">Job postings</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2">Create, edit, publish, close, or delete.</p>
+        </div>
+        <a
+          class="bg-tertiary text-white px-6 py-3 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all"
+          href="/admin/jobs/create"
+          >Create job</a
+        >
+      </div>
+
+      <div class="bg-surface border-2 border-on-surface overflow-auto">
+        <table class="w-full text-left">
+          <thead class="border-b-2 border-on-surface bg-surface-container-low">
+            <tr class="font-label-sm uppercase">
+              <th class="p-4">Title</th>
+              <th class="p-4">Company</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Updated</th>
+              <th class="p-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for j in jobs %}
+              <tr class="border-b border-outline-variant">
+                <td class="p-4 font-headline-md">{{ j.title }}</td>
+                <td class="p-4">{{ j.company_or_team }}</td>
+                <td class="p-4">
+                  <span class="stamp font-label-sm {% if j.status == 'published' %}text-primary border-primary{% elif j.status == 'closed' %}text-secondary border-secondary{% else %}border-on-surface{% endif %}">
+                    {{ j.status }}
+                  </span>
+                </td>
+                <td class="p-4">{{ j.updated_at or "—" }}</td>
+                <td class="p-4">
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-2 min-w-[420px]">
+                    <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors text-center" href="/admin/jobs/{{ j._id }}/edit">Edit</a>
+                    <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors text-center" href="/admin/jobs/{{ j._id }}/questions">Questions</a>
+                    <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors text-center" href="/admin/jobs/{{ j._id }}/stats">Stats</a>
+                    <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors text-center" href="/admin/jobs/{{ j._id }}/responses">Responses</a>
+
+                    <form method="post" action="/admin/jobs/{{ j._id }}/status">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+                      <input type="hidden" name="status" value="published" />
+                      <button class="w-full border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors" type="submit">Publish</button>
+                    </form>
+                    <form method="post" action="/admin/jobs/{{ j._id }}/status">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+                      <input type="hidden" name="status" value="draft" />
+                      <button class="w-full border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" type="submit">Unpublish</button>
+                    </form>
+                    <form method="post" action="/admin/jobs/{{ j._id }}/status">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+                      <input type="hidden" name="status" value="closed" />
+                      <button class="w-full border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" type="submit">Close</button>
+                    </form>
+
+                    <form method="post" action="/admin/jobs/{{ j._id }}/delete" onsubmit="return confirm('Delete this job?');">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+                      <button class="w-full border-2 border-on-surface bg-error-container px-4 py-2 font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if not jobs %}
+              <tr>
+                <td class="p-8" colspan="5">No jobs created yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+{% endblock %}
