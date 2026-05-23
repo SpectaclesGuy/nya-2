@@ -139,7 +139,7 @@
   </head>
   <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
     <nav
-      class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface z-50 full-width top-0 border-b-2 border-outline fixed"
+      class="flex justify-between items-center w-full px-5 sm:px-8 md:px-margin-desktop py-4 bg-surface z-50 full-width top-0 border-b-2 border-outline fixed"
     >
       <a class="font-headline-md text-headline-md font-bold tracking-tighter" href="/">NOT / AVERAGE</a>
       <div class="hidden md:flex gap-8 items-center">
@@ -175,6 +175,29 @@
         >
         {% endif %}
       </div>
+
+      <details class="md:hidden relative">
+        <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-4 py-2 font-label-md text-label-md font-bold inline-flex items-center gap-2">
+          <span class="material-symbols-outlined">menu</span>
+          Menu
+        </summary>
+        <div class="absolute right-0 mt-2 w-56 bg-surface border-2 border-on-surface p-3 flex flex-col gap-2 z-50">
+          {% if user and user.role == "admin" %}
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/dashboard">Admin Dashboard</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/jobs">Manage Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/submissions">Submissions</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/users">Users</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Public Jobs</a>
+          {% elif user %}
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/candidate/dashboard">Dashboard</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/candidate/profile">Update Profile</a>
+          {% else %}
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
+          {% endif %}
+        </div>
+      </details>
+
       <div class="flex items-center gap-3">
         {% if user %}
         <form action="/auth/logout" method="post">
@@ -195,7 +218,7 @@
         {% endif %}
       </div>
     </nav>
-    <main class="pt-24 px-margin-desktop">
+    <main class="pt-24 px-5 sm:px-8 md:px-margin-desktop">
       {% block content %}{% endblock %}
     </main>
   </body>

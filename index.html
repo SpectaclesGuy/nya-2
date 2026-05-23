@@ -128,12 +128,23 @@
 </head>
 <body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
 <!-- TopNavBar -->
-<nav class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface dark:bg-surface-dim z-50 docked full-width top-0 border-b-2 border-outline dark:border-outline-variant fixed">
+<nav class="flex justify-between items-center w-full px-5 sm:px-8 md:px-margin-desktop py-4 bg-surface dark:bg-surface-dim z-50 docked full-width top-0 border-b-2 border-outline dark:border-outline-variant fixed">
 <div class="font-headline-md text-headline-md font-bold tracking-tighter text-on-surface dark:text-on-surface-variant">NOT / AVERAGE</div>
 <div class="hidden md:flex gap-8 items-center">
 <a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#manifesto">Manifesto</a>
 <a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Active Forges</a>
 </div>
+<details class="md:hidden relative">
+  <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-4 py-2 font-label-md text-label-md font-bold inline-flex items-center gap-2">
+    <span class="material-symbols-outlined">menu</span>
+    Menu
+  </summary>
+  <div class="absolute right-0 mt-2 w-56 bg-surface border-2 border-on-surface p-3 flex flex-col gap-2 z-50">
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#manifesto">Manifesto</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#active-forges">Active Forges</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
+  </div>
+</details>
 <div class="flex items-center gap-3" id="topnav-auth-slot">
   <a class="bg-tertiary text-white px-6 py-2 border-2 border-on-surface font-label-md text-label-md font-bold hover:bg-tertiary-container transition-all inline-flex items-center justify-center" href="/auth/google/login">
               Enter The Forge
@@ -142,8 +153,8 @@
 </nav>
 <main class="pt-24">
 <!-- Section 1: Hero -->
-<section class="grid grid-cols-12 gap-0 border-b-2 border-on-surface min-h-[819px]">
-<div class="col-span-12 lg:col-span-8 p-margin-desktop flex flex-col justify-center border-r-2 border-on-surface">
+<section class="grid grid-cols-12 gap-0 border-b-2 border-on-surface min-h-[680px] md:min-h-[819px]">
+<div class="col-span-12 lg:col-span-8 p-6 sm:p-8 md:p-margin-desktop flex flex-col justify-center border-b-2 lg:border-b-0 lg:border-r-2 border-on-surface">
 <div class="mb-6">
 <span class="stamp font-label-sm text-primary border-primary">JUNE COHORT / FORGE OPEN</span>
 </div>
@@ -163,7 +174,7 @@
 </div>
 </div>
 <!-- Forge Status Panel -->
-<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-8 flex flex-col gap-8">
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-6 sm:p-8 flex flex-col gap-8">
 <div class="border-2 border-on-surface p-6 bg-white relative overflow-hidden">
 <div class="absolute top-0 right-0 p-2 opacity-10">
 <span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
@@ -201,7 +212,7 @@
 </div>
 </section>
 <!-- Section 2: Comparison -->
-<section class="py-24 px-margin-desktop border-b-2 border-on-surface bg-surface-container-lowest">
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-b-2 border-on-surface bg-surface-container-lowest">
 <div class="mb-16">
 <span class="font-label-sm text-label-sm bg-on-surface text-surface px-2 py-1 uppercase">Metric Comparison</span>
 <h2 class="font-headline-lg text-headline-lg mt-4">Average Waits. NYA Forges.</h2>
@@ -281,7 +292,7 @@
 </div>
 </section>
 <!-- Section 4: Active Forges -->
-<section class="py-24 px-margin-desktop bg-surface-dim" id="active-forges">
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop bg-surface-dim" id="active-forges">
 <div class="flex justify-between items-end mb-16">
 <div>
 <h2 class="font-headline-lg text-headline-lg uppercase">Active Forges</h2>
@@ -363,7 +374,7 @@
 </div>
 </section>
 <!-- Section 5: The Forge Gate -->
-<section class="py-24 px-margin-desktop border-y-2 border-on-surface bg-background">
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-y-2 border-on-surface bg-background">
 <h2 class="font-display-lg text-display-lg uppercase text-center mb-24">The Forge Gate</h2>
 <div class="max-w-4xl mx-auto space-y-0 border-l-2 border-on-surface">
 <div class="relative pl-12 pb-16">
@@ -394,7 +405,7 @@
 </div>
 </section>
 <!-- Section 6: Manifesto -->
-<section class="py-32 px-margin-desktop bg-on-surface text-surface flex items-center justify-center text-center overflow-hidden relative" id="manifesto">
+<section class="py-24 sm:py-32 px-5 sm:px-8 md:px-margin-desktop bg-on-surface text-surface flex items-center justify-center text-center overflow-hidden relative" id="manifesto">
 <!-- Background Decorative Texture -->
 <div class="absolute inset-0 opacity-10 pointer-events-none select-none overflow-hidden">
 <div class="text-[200px] font-black leading-none opacity-20 rotate-12 -translate-y-20">NOT AVERAGE</div>
@@ -414,7 +425,7 @@
 </section>
 </main>
 <!-- Footer -->
-<footer class="grid grid-cols-1 md:grid-cols-4 gap-gutter w-full px-margin-desktop py-12 bg-surface-container-highest border-t-2 border-on-surface">
+<footer class="grid grid-cols-1 md:grid-cols-4 gap-gutter w-full px-5 sm:px-8 md:px-margin-desktop py-12 bg-surface-container-highest border-t-2 border-on-surface">
 <div class="col-span-1">
 <div class="font-label-md text-label-md font-bold text-on-surface mb-4">NOT / AVERAGE</div>
 <p class="font-label-sm text-label-sm opacity-60">A student-run production environment for high-agency engineers and researchers.</p>
