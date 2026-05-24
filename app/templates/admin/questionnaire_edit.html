@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-16">
+    <div class="max-w-4xl">
+      <div class="mb-10">
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+        <h1 class="font-headline-lg text-headline-lg mt-4">Questionnaire builder</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Section:
+          <span class="font-label-md font-bold">{{ section_label }}</span>
+        </p>
+      </div>
+
+      <form class="bg-surface border-2 border-on-surface p-8" method="post" action="/admin/questionnaires/{{ section }}" id="q-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+        <input type="hidden" name="questions_json" id="questions_json" />
+
+        <div class="mb-8 border border-outline-variant bg-surface-container-lowest p-6">
+          <label class="block font-label-md text-label-md mb-2" for="section">Tag questionnaire to section</label>
+          <select class="w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md" id="section" name="section" required>
+            <option value="project_internship" {% if section == "project_internship" %}selected{% endif %}>Project Internship</option>
+            <option value="research_internship" {% if section == "research_internship" %}selected{% endif %}>Research Internship</option>
+          </select>
+          <div class="font-label-sm opacity-60 mt-2">Changing this will move the questionnaire to the selected section.</div>
+        </div>
+
+        <div class="flex items-center justify-between gap-4 flex-wrap mb-6">
+          <div class="font-label-md text-label-md opacity-60 uppercase">Builder</div>
+          <div class="flex gap-3">
+            <button type="button" id="add-section" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors">Add Section</button>
+            <button type="button" id="add-text" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors">Add Text</button>
+            <button type="button" id="add-single" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors">Add MCQ (Single)</button>
+            <button type="button" id="add-multi" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors">Add MCQ (Multi)</button>
+          </div>
+        </div>
+
+        <div id="q-list" class="space-y-6"></div>
+
+        <div class="mt-10 flex items-center gap-4">
+          <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
+            Save questionnaire
+          </button>
+          {% if request.query_params.get("saved") %}
+            <span class="font-label-md text-label-md opacity-60">Saved.</span>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const initialQuestions = {{ questions_json | safe }};
+
+    const listEl = document.getElementById('q-list');
+    const hiddenEl = document.getElementById('questions_json');
+
+    const genId = () => (crypto && crypto.randomUUID) ? crypto.randomUUID().replace(/-/g, '') : String(Date.now()) + Math.random().toString(16).slice(2);
+
+    const render = () => {
+      const cards = Array.from(listEl.querySelectorAll('[data-qid]'));
+      const out = cards.map((card, idx) => {
+        const itemType = card.getAttribute('data-itemtype') || 'question';
+        const title = (card.querySelector('[name="title"]')?.value || '').trim();
+        const help_text = (card.querySelector('[name="help_text"]')?.value || '').trim();
+        if (itemType === 'section') {
+          return { item_type: 'section', title, help_text: help_text || null, order: idx };
+        }
+        const qid = card.getAttribute('data-qid');
+        const question_type = card.querySelector('[name="question_type"]').value || 'text';
+        const required = !!card.querySelector('[name="required"]').checked;
+        const options = Array.from(card.querySelectorAll('[data-opt] input')).map(i => i.value.trim()).filter(Boolean);
+        return { item_type: 'question', question_id: qid, title, help_text: help_text || null, question_type, required, options, order: idx };
+      });
+      hiddenEl.value = JSON.stringify(out);
+    };
+
+    const addOptionRow = (optsWrap, value='') => {
+      const row = document.createElement('div');
+      row.className = 'flex gap-3 items-center';
+      row.setAttribute('data-opt', '1');
+
+      const input = document.createElement('input');
+      input.className = 'w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-2 font-body-md';
+      input.placeholder = 'Option text';
+      input.value = value;
+      input.addEventListener('input', render);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      del.textContent = 'X';
+      del.addEventListener('click', () => { row.remove(); render(); });
+
+      row.appendChild(input);
+      row.appendChild(del);
+      optsWrap.appendChild(row);
+    };
+
+    const makeSectionCard = (s) => {
+      const card = document.createElement('div');
+      card.className = 'border-2 border-on-surface p-6 bg-secondary-fixed/20';
+      card.setAttribute('data-qid', 'section_' + genId());
+      card.setAttribute('data-itemtype', 'section');
+
+      const head = document.createElement('div');
+      head.className = 'flex items-center justify-between gap-4 flex-wrap mb-4';
+
+      const badge = document.createElement('span');
+      badge.className = 'stamp font-label-sm border-on-surface';
+      badge.textContent = 'SECTION';
+
+      const controls = document.createElement('div');
+      controls.className = 'flex gap-2';
+
+      const up = document.createElement('button');
+      up.type = 'button';
+      up.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      up.textContent = 'Up';
+      up.addEventListener('click', () => {
+        const prev = card.previousElementSibling;
+        if (prev) listEl.insertBefore(card, prev);
+        render();
+      });
+
+      const down = document.createElement('button');
+      down.type = 'button';
+      down.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      down.textContent = 'Down';
+      down.addEventListener('click', () => {
+        const next = card.nextElementSibling;
+        if (next) listEl.insertBefore(next, card);
+        render();
+      });
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      del.textContent = 'Delete';
+      del.addEventListener('click', () => { card.remove(); render(); });
+
+      controls.appendChild(up);
+      controls.appendChild(down);
+      controls.appendChild(del);
+
+      head.appendChild(badge);
+      head.appendChild(controls);
+      card.appendChild(head);
+
+      const titleWrap = document.createElement('div');
+      const titleLabel = document.createElement('label');
+      titleLabel.className = 'block font-label-md text-label-md mb-2';
+      titleLabel.textContent = 'Section title';
+      const title = document.createElement('input');
+      title.name = 'title';
+      title.required = true;
+      title.className = 'w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md';
+      title.value = s.title || '';
+      title.addEventListener('input', render);
+      titleWrap.appendChild(titleLabel);
+      titleWrap.appendChild(title);
+      card.appendChild(titleWrap);
+
+      const helpWrap = document.createElement('div');
+      helpWrap.className = 'mt-6';
+      const helpLabel = document.createElement('label');
+      helpLabel.className = 'block font-label-md text-label-md mb-2';
+      helpLabel.textContent = 'Section note (optional)';
+      const help = document.createElement('input');
+      help.name = 'help_text';
+      help.className = 'w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md';
+      help.value = s.help_text || '';
+      help.addEventListener('input', render);
+      helpWrap.appendChild(helpLabel);
+      helpWrap.appendChild(help);
+      card.appendChild(helpWrap);
+
+      return card;
+    };
+
+    const makeQuestionCard = (q) => {
+      const qid = q.question_id || genId();
+      const card = document.createElement('div');
+      card.className = 'border-2 border-on-surface p-6 bg-surface-container-lowest';
+      card.setAttribute('data-qid', qid);
+      card.setAttribute('data-itemtype', 'question');
+
+      const head = document.createElement('div');
+      head.className = 'flex items-center justify-between gap-4 flex-wrap mb-4';
+
+      const badge = document.createElement('span');
+      badge.className = 'stamp font-label-sm border-on-surface';
+      badge.textContent = 'QUESTION';
+
+      const controls = document.createElement('div');
+      controls.className = 'flex gap-2';
+
+      const up = document.createElement('button');
+      up.type = 'button';
+      up.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      up.textContent = 'Up';
+      up.addEventListener('click', () => {
+        const prev = card.previousElementSibling;
+        if (prev) listEl.insertBefore(card, prev);
+        render();
+      });
+
+      const down = document.createElement('button');
+      down.type = 'button';
+      down.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      down.textContent = 'Down';
+      down.addEventListener('click', () => {
+        const next = card.nextElementSibling;
+        if (next) listEl.insertBefore(next, card);
+        render();
+      });
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      del.textContent = 'Delete';
+      del.addEventListener('click', () => { card.remove(); render(); });
+
+      controls.appendChild(up);
+      controls.appendChild(down);
+      controls.appendChild(del);
+
+      head.appendChild(badge);
+      head.appendChild(controls);
+      card.appendChild(head);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+
+      const titleWrap = document.createElement('div');
+      const titleLabel = document.createElement('label');
+      titleLabel.className = 'block font-label-md text-label-md mb-2';
+      titleLabel.textContent = 'Title';
+      const title = document.createElement('input');
+      title.name = 'title';
+      title.required = true;
+      title.className = 'w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md';
+      title.value = q.title || '';
+      title.addEventListener('input', render);
+      titleWrap.appendChild(titleLabel);
+      titleWrap.appendChild(title);
+
+      const typeWrap = document.createElement('div');
+      const typeLabel = document.createElement('label');
+      typeLabel.className = 'block font-label-md text-label-md mb-2';
+      typeLabel.textContent = 'Type';
+      const type = document.createElement('select');
+      type.name = 'question_type';
+      type.className = 'w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md';
+      ['text','single_choice','multiple_choice'].forEach(v => {
+        const o = document.createElement('option');
+        o.value = v;
+        o.textContent = v === 'text' ? 'Text' : (v === 'single_choice' ? 'MCQ (Single)' : 'MCQ (Multi)');
+        if ((q.question_type || 'text') === v) o.selected = true;
+        type.appendChild(o);
+      });
+      typeWrap.appendChild(typeLabel);
+      typeWrap.appendChild(type);
+
+      grid.appendChild(titleWrap);
+      grid.appendChild(typeWrap);
+      card.appendChild(grid);
+
+      const helpWrap = document.createElement('div');
+      helpWrap.className = 'mt-6';
+      const helpLabel = document.createElement('label');
+      helpLabel.className = 'block font-label-md text-label-md mb-2';
+      helpLabel.textContent = 'Help text (optional)';
+      const help = document.createElement('input');
+      help.name = 'help_text';
+      help.className = 'w-full border-2 border-on-surface bg-surface px-4 py-3 font-body-md';
+      help.value = q.help_text || '';
+      helpWrap.appendChild(helpLabel);
+      helpWrap.appendChild(help);
+      card.appendChild(helpWrap);
+
+      const reqWrap = document.createElement('label');
+      reqWrap.className = 'mt-6 inline-flex items-center gap-3 font-label-md text-label-md';
+      const req = document.createElement('input');
+      req.type = 'checkbox';
+      req.name = 'required';
+      req.checked = !!q.required;
+      reqWrap.appendChild(req);
+      reqWrap.appendChild(document.createElement('span')).textContent = 'Required';
+      card.appendChild(reqWrap);
+
+      const optsWrap = document.createElement('div');
+      optsWrap.className = 'mt-6 space-y-3';
+      const optsHead = document.createElement('div');
+      optsHead.className = 'flex items-center justify-between';
+      const optsTitle = document.createElement('div');
+      optsTitle.className = 'font-label-md text-label-md opacity-60 uppercase';
+      optsTitle.textContent = 'Options';
+      const addOpt = document.createElement('button');
+      addOpt.type = 'button';
+      addOpt.className = 'border-2 border-on-surface bg-surface px-3 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors';
+      addOpt.textContent = 'Add option';
+      addOpt.addEventListener('click', () => { addOptionRow(optsWrap); render(); });
+      optsHead.appendChild(optsTitle);
+      optsHead.appendChild(addOpt);
+      optsWrap.appendChild(optsHead);
+
+      const toggleOptions = () => {
+        const t = type.value;
+        const show = (t === 'single_choice' || t === 'multiple_choice');
+        optsWrap.style.display = show ? 'block' : 'none';
+      };
+
+      type.addEventListener('change', () => { toggleOptions(); render(); });
+      help.addEventListener('input', render);
+      req.addEventListener('change', render);
+
+      (q.options || []).forEach(o => addOptionRow(optsWrap, o));
+      if (!q.options || q.options.length === 0) addOptionRow(optsWrap, '');
+      toggleOptions();
+      card.appendChild(optsWrap);
+
+      return card;
+    };
+
+    const addQuestion = (qtype) => {
+      const q = { item_type: 'question', question_id: genId(), title: '', help_text: '', question_type: qtype, required: false, options: [] };
+      listEl.appendChild(makeQuestionCard(q));
+      render();
+    };
+
+    const addSection = () => {
+      const s = { item_type: 'section', title: '', help_text: '' };
+      listEl.appendChild(makeSectionCard(s));
+      render();
+    };
+
+    document.getElementById('add-section').addEventListener('click', addSection);
+    document.getElementById('add-text').addEventListener('click', () => addQuestion('text'));
+    document.getElementById('add-single').addEventListener('click', () => addQuestion('single_choice'));
+    document.getElementById('add-multi').addEventListener('click', () => addQuestion('multiple_choice'));
+
+    (initialQuestions || []).sort((a,b) => (a.order||0)-(b.order||0)).forEach((it) => {
+      const t = String(it && it.item_type ? it.item_type : 'question');
+      if (t === 'section') listEl.appendChild(makeSectionCard(it || {}));
+      else listEl.appendChild(makeQuestionCard(it || {}));
+    });
+    render();
+
+    document.getElementById('q-form').addEventListener('submit', render);
+  </script>
+{% endblock %}

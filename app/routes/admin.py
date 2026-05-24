@@ -18,7 +18,8 @@ from app.core.templates import templates
 from app.services.admin_service import AdminService
 from app.services.application_service import ApplicationService
 from app.services.job_service import JobService
-from app.schemas.questions import JobQuestionUpsert
+from app.schemas.questions import JobQuestionUpsert, QuestionnaireSectionUpsert
+from app.services.track_questionnaire_service import TrackQuestionnaireService
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -30,6 +31,125 @@ async def dashboard(request: Request, user=Depends(require_role("admin"))):
         "admin/dashboard.html",
         {"user": user, "page_title": "Admin Dashboard"},
     )
+
+
+def _track_section_label(section: str) -> str:
+    return "Project Internship" if section == "project_internship" else "Research Internship"
+
+
+@router.get("/questionnaires", response_class=HTMLResponse)
+async def questionnaires_list(request: Request, user=Depends(require_role("admin"))):
+    existing = {d.get("section"): d for d in await TrackQuestionnaireService.list_all(limit=100)}
+
+    def make_row(section: str):
+        doc = existing.get(section) or {}
+        updated_at = doc.get("updated_at")
+        items = doc.get("items") or doc.get("questions") or []
+        count = len([i for i in (items or []) if str((i or {}).get("item_type") or "question") == "question"])
+        return {
+            "section": section,
+            "label": _track_section_label(section),
+            "exists": bool(doc),
+            "updated_at": str(updated_at) if updated_at else "",
+            "count": count,
+        }
+
+    sections = [make_row("project_internship"), make_row("research_internship")]
+    return templates.TemplateResponse(
+        request,
+        "admin/questionnaires.html",
+        {"user": user, "page_title": "Make Questionnaire", "sections": sections},
+    )
+
+
+@router.get("/questionnaires/{section}", response_class=HTMLResponse)
+async def questionnaire_edit_get(request: Request, section: str, user=Depends(require_role("admin"))):
+    if section not in {"project_internship", "research_internship"}:
+        return RedirectResponse("/admin/questionnaires", status_code=302)
+    doc = await TrackQuestionnaireService.get_by_section(section=section)
+    items = (doc or {}).get("items") or (doc or {}).get("questions") or []
+    return templates.TemplateResponse(
+        request,
+        "admin/questionnaire_edit.html",
+        {
+            "user": user,
+            "page_title": "Questionnaire Builder",
+            "section": section,
+            "section_label": _track_section_label(section),
+            "questions_json": json.dumps(items, default=str),
+        },
+    )
+
+
+@router.post("/questionnaires/{section}")
+async def questionnaire_edit_post(request: Request, section: str, user=Depends(require_role("admin"))):
+    if section not in {"project_internship", "research_internship"}:
+        return RedirectResponse("/admin/questionnaires", status_code=302)
+    try:
+        await validate_csrf(request)
+    except Exception:
+        return RedirectResponse(f"/admin/questionnaires/{section}?error=csrf", status_code=302)
+
+    form = await request.form()
+    section_out = str(form.get("section") or section).strip()
+    if section_out not in {"project_internship", "research_internship"}:
+        return RedirectResponse(f"/admin/questionnaires/{section}?error=section", status_code=302)
+
+    raw = str(form.get("questions_json") or "[]")
+    try:
+        data = json.loads(raw)
+        if not isinstance(data, list):
+            raise ValueError("Invalid payload")
+    except Exception:
+        return RedirectResponse(f"/admin/questionnaires/{section}?error=payload", status_code=302)
+
+    normalized: list[dict] = []
+    try:
+        for idx, q in enumerate(data):
+            if not isinstance(q, dict):
+                continue
+            item_type = str(q.get("item_type") or "question")
+            order = int(q.get("order") if q.get("order") is not None else idx)
+            title = str(q.get("title") or "").strip()
+            help_text = str(q.get("help_text") or "").strip() or None
+            if item_type == "section":
+                validated = QuestionnaireSectionUpsert(title=title, help_text=help_text, order=order)
+                normalized.append(validated.model_dump())
+            else:
+                qid = str(q.get("question_id") or uuid.uuid4().hex)
+                qtype = str(q.get("question_type") or "text")
+                required = bool(q.get("required"))
+                options = q.get("options") or []
+                if not isinstance(options, list):
+                    options = []
+                options = [str(o).strip() for o in options if str(o).strip()]
+                validated = JobQuestionUpsert(
+                    question_id=qid,
+                    title=title,
+                    help_text=help_text,
+                    question_type=qtype,  # type: ignore[arg-type]
+                    required=required,
+                    options=options,
+                    order=order,
+                )
+                out = validated.model_dump()
+                out["item_type"] = "question"
+                normalized.append(out)
+    except Exception:
+        return RedirectResponse(f"/admin/questionnaires/{section}?error=validation", status_code=302)
+
+    normalized.sort(key=lambda x: int(x.get("order", 0)))
+    for i, q in enumerate(normalized):
+        q["order"] = i
+
+    try:
+        await TrackQuestionnaireService.upsert_for_section(section=section_out, items=normalized)
+    except Exception:
+        return RedirectResponse(f"/admin/questionnaires/{section}?error=db", status_code=302)
+
+    if section_out != section:
+        return RedirectResponse(f"/admin/questionnaires/{section_out}?saved=1", status_code=302)
+    return RedirectResponse(f"/admin/questionnaires/{section}?saved=1", status_code=302)
 
 
 @router.get("/users", response_class=HTMLResponse)

@@ -133,7 +133,6 @@
 <div class="hidden md:flex gap-8 items-center">
 <a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#manifesto">Manifesto</a>
 <a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#tracks">Tracks</a>
-<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Projects</a>
 <a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#process">Process</a>
 </div>
 <details class="md:hidden relative">
@@ -144,7 +143,6 @@
   <div class="absolute right-0 mt-2 w-56 bg-surface border-2 border-on-surface p-3 flex flex-col gap-2 z-50">
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#manifesto">Manifesto</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#tracks">Tracks</a>
-    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#active-forges">Projects</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#process">Process</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
   </div>
@@ -172,8 +170,8 @@
 <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center justify-center" href="/auth/google/login">
                         Enter June Cohort
                     </a>
-<a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="#active-forges">
-                        View Active Forges
+<a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="#tracks">
+                        Explore Tracks
                     </a>
 </div>
 </div>
@@ -245,7 +243,7 @@
         <div class="font-label-sm opacity-70">• Automation</div>
       </div>
 
-      <a class="w-full mt-10 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors block text-center" href="/jobs?type=project_internship">
+      <a class="w-full mt-10 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors block text-center" href="/tracks/project-internship">
         Explore Project Track →
       </a>
     </div>
@@ -272,7 +270,7 @@
         <div class="font-label-sm opacity-90">• Paper pipelines</div>
       </div>
 
-      <a class="w-full mt-10 py-3 border border-surface font-label-sm uppercase font-bold hover:bg-surface hover:text-on-surface transition-colors block text-center relative z-10" href="/jobs?type=research_internship">
+      <a class="w-full mt-10 py-3 border border-surface font-label-sm uppercase font-bold hover:bg-surface hover:text-on-surface transition-colors block text-center relative z-10" href="/tracks/research-internship">
         Explore Research Track →
       </a>
     </div>
@@ -342,8 +340,8 @@
     </div>
   </div>
 </section>
-<!-- Section 4: Projects -->
-<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop bg-surface-dim" id="active-forges">
+<!-- Section 4: Projects (removed) -->
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop bg-surface-dim" id="active-forges" hidden>
 <div class="flex justify-between items-end mb-16">
 <div>
 <h2 class="font-headline-lg text-headline-lg uppercase">What you may work on</h2>
@@ -623,6 +621,7 @@
             }
         })();
 
+        /* Removed Projects section:
         // Active Forges: fetch from backend (MongoDB) and replace cards if available.
         (async () => {
             const grid = document.getElementById('active-forges-grid');
@@ -841,5 +840,6 @@
                 console.warn('[Active Forges] Fetch failed; showing static fallback.');
             }
         })();
+        */
     </script>
 </body></html>

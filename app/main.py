@@ -22,6 +22,7 @@ from app.routes import forges_api
 from app.routes import forge_status_api
 from app.routes import me_api
 from app.routes import jobs_api
+from app.routes import tracks
 
 
 def create_app() -> FastAPI:
@@ -43,6 +44,7 @@ def create_app() -> FastAPI:
     app.include_router(forge_status_api.router)
     app.include_router(me_api.router)
     app.include_router(jobs_api.router)
+    app.include_router(tracks.router)
 
     # Static (future-proof; currently empty)
     app.mount("/static", StaticFiles(directory="app/static"), name="static")

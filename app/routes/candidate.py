@@ -26,6 +26,33 @@ def _safe_session_value(v):
     return v
 
 
+def _to_ddmmyyyy(raw: object) -> str:
+    s = str(raw or "").strip()
+    if not s:
+        return ""
+    # Already DD-MM-YYYY
+    if len(s) == 10 and s[2] == "-" and s[5] == "-":
+        return s
+    # ISO YYYY-MM-DD (or ISO datetime prefix)
+    if len(s) >= 10 and s[4] == "-" and s[7] == "-":
+        yyyy, mm, dd = s[:10].split("-")
+        if len(dd) == 2 and len(mm) == 2 and len(yyyy) == 4:
+            return f"{dd}-{mm}-{yyyy}"
+    return s
+
+
+def _normalize_ddmmyyyy_input(raw: object) -> str:
+    s = str(raw or "").strip()
+    if not s:
+        return ""
+    # Accept YYYY-MM-DD and convert
+    if len(s) >= 10 and s[4] == "-" and s[7] == "-":
+        yyyy, mm, dd = s[:10].split("-")
+        if len(dd) == 2 and len(mm) == 2 and len(yyyy) == 4:
+            return f"{dd}-{mm}-{yyyy}"
+    return s
+
+
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request, user=Depends(require_role("candidate"))):
     return templates.TemplateResponse(
@@ -75,6 +102,8 @@ async def profile_get(request: Request, user=Depends(require_role("candidate")))
             ):
                 if k in user_doc:
                     view_user[k] = _safe_session_value(user_doc.get(k))
+            view_user["date_of_birth"] = _to_ddmmyyyy(user_doc.get("date_of_birth"))
+            view_user["available_from"] = _to_ddmmyyyy(user_doc.get("available_from"))
     except Exception:
         pass
     return templates.TemplateResponse(
@@ -107,7 +136,7 @@ async def profile_post(request: Request, user=Depends(require_role("candidate"))
             current_city=form.get("current_city"),
             current_country=form.get("current_country"),
             linkedin_url=form.get("linkedin_url"),
-            date_of_birth=form.get("date_of_birth"),
+            date_of_birth=_normalize_ddmmyyyy_input(form.get("date_of_birth")),
             gender=form.get("gender"),
             nationality=form.get("nationality"),
             address=form.get("address"),
@@ -124,7 +153,7 @@ async def profile_post(request: Request, user=Depends(require_role("candidate"))
             github_url=form.get("github_url"),
             portfolio_url=form.get("portfolio_url"),
             other_links=other_links_raw,
-            available_from=form.get("available_from"),
+            available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
             hours_per_week=form.get("hours_per_week"),
             work_mode=form.get("work_mode"),
             notice_period_weeks=form.get("notice_period_weeks") or None,
@@ -278,6 +307,8 @@ async def complete_profile_get(request: Request, user=Depends(require_role("cand
             ):
                 if k in user_doc:
                     view_user[k] = _safe_session_value(user_doc.get(k))
+            view_user["date_of_birth"] = _to_ddmmyyyy(user_doc.get("date_of_birth"))
+            view_user["available_from"] = _to_ddmmyyyy(user_doc.get("available_from"))
     except Exception:
         pass
     return templates.TemplateResponse(
@@ -309,7 +340,7 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
             current_city=form.get("current_city"),
             current_country=form.get("current_country"),
             linkedin_url=form.get("linkedin_url"),
-            date_of_birth=form.get("date_of_birth"),
+            date_of_birth=_normalize_ddmmyyyy_input(form.get("date_of_birth")),
             gender=form.get("gender"),
             nationality=form.get("nationality"),
             address=form.get("address"),
@@ -326,7 +357,7 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
             github_url=form.get("github_url"),
             portfolio_url=form.get("portfolio_url"),
             other_links=other_links_raw,
-            available_from=form.get("available_from"),
+            available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
             hours_per_week=form.get("hours_per_week"),
             work_mode=form.get("work_mode"),
             notice_period_weeks=form.get("notice_period_weeks") or None,

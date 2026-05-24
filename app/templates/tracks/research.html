@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-10">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-surface border-2 border-on-surface shadow-[14px_14px_0_0_rgba(28,27,27,1)] overflow-hidden">
+        <div class="p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center bg-surface-container-low">
+          <div>
+            <div class="inline-flex items-center gap-3">
+              <span class="stamp font-label-sm border-on-surface">SUMMER FORGE // RESEARCH INTERNSHIP TRACK</span>
+              <span class="stamp font-label-sm text-primary border-primary">TRACK_01</span>
+            </div>
+            <h1 class="font-display-lg text-display-lg mt-6">Turn curiosity into research proof.</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant mt-6 max-w-xl">
+              Work on literature reviews, AI/ML experiments, datasets, XAI, visualizations, technical writing, and paper-oriented research pipelines.
+            </p>
+            <div class="mt-8 flex gap-4 flex-wrap">
+              <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" href="/tracks/research-internship/apply">
+                Apply for research track
+              </a>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="border-2 border-on-surface border-dashed bg-surface p-10 min-h-[260px] flex items-end justify-end">
+              <div class="border-2 border-on-surface bg-secondary-fixed px-6 py-5 rotate-[-6deg] shadow-[8px_8px_0_0_rgba(28,27,27,1)] max-w-xs">
+                <div class="font-label-sm uppercase tracking-widest mb-2">Notes</div>
+                <div class="font-body-md text-body-md">Emphasize rigorous methodology.</div>
+              </div>
+            </div>
+            <div class="absolute top-6 right-6 border-2 border-primary text-primary bg-surface px-5 py-3 font-label-md font-bold rotate-[4deg]">
+              TRACK_01
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 border-t border-outline-variant pt-12">
+        <h2 class="font-headline-md text-headline-md mb-6">Target Audience</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {% for a in ["AI/ML learners","Research writers","Literature review contributors","Data analysis students"] %}
+            <div class="border-2 border-on-surface bg-surface p-5">
+              <div class="font-body-md text-body-md">{{ a }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-16 border-t border-outline-variant pt-12">
+        <h2 class="font-headline-md text-headline-md mb-6">Focus Areas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {% set areas = [
+            ("AI/ML & Deep Learning","Core model architectures, training paradigms, and evaluation metrics.","R-01"),
+            ("XAI & NeuroAI","Explainable AI techniques and intersections with EEG data.","R-02"),
+            ("Medical AI","Applications of machine learning in healthcare and diagnostics.","R-03"),
+          ] %}
+          {% for title, desc, ref in areas %}
+            <div class="border-2 border-on-surface bg-surface-container-low p-8 relative">
+              <div class="absolute top-3 right-3 border border-on-surface px-3 py-1 font-label-sm uppercase tracking-widest bg-surface">REF: {{ ref }}</div>
+              <div class="font-headline-md text-headline-md">{{ title }}</div>
+              <div class="font-body-md text-body-md text-on-surface-variant mt-3">{{ desc }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-16 border-t border-outline-variant pt-12">
+        <div class="border-2 border-on-surface bg-surface-container-low p-10 sm:p-12">
+          <div class="font-headline-md text-headline-md mb-8">Workflow Protocol</div>
+          <div class="grid grid-cols-2 sm:grid-cols-6 gap-4 items-center">
+            {% for n, label in [("01","Read"),("02","Review"),("03","Experiment"),("04","Visualize"),("05","Document"),("06","Present")] %}
+              <div class="border-2 border-on-surface bg-surface px-4 py-5 text-center">
+                <div class="font-label-sm text-primary uppercase tracking-widest">{{ n }}</div>
+                <div class="font-body-md text-body-md mt-2">{{ label }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 border-2 border-on-surface bg-on-surface text-white p-10 sm:p-14 text-center">
+        <div class="font-label-sm uppercase tracking-widest opacity-70">Ready to start the research?</div>
+        <div class="font-headline-lg text-headline-lg mt-4">Turn curiosity into proof.</div>
+        <div class="mt-8">
+          <a class="bg-surface text-on-surface border-2 border-on-surface px-10 py-5 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="/tracks/research-internship/apply">
+            Apply for research internship
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

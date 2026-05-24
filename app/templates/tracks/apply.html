@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block content %}
+  {% set questions_only = [] %}
+  {% for it in (items or []) %}
+    {% if (it.item_type if it.item_type is defined else 'question') == 'question' %}
+      {% set _ = questions_only.append(it) %}
+    {% endif %}
+  {% endfor %}
+
+  <section class="py-14">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-8">
+        <div>
+          <span class="stamp font-label-sm text-primary border-primary">APPLY</span>
+          <h1 class="font-headline-lg text-headline-lg mt-4">{{ section_label }}</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-3xl">
+            Long forms donâ€™t have to feel long. Scroll inside the dossier, not the whole page.
+          </p>
+        </div>
+        <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors" href="/tracks/{{ 'project-internship' if section_key == 'project_internship' else 'research-internship' }}">
+          Back
+        </a>
+      </div>
+
+      {% if request.query_params.get("error") %}
+        <div class="mb-6 border-2 border-on-surface bg-error-container p-4">
+          <div class="font-label-md font-bold">Submission failed.</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">{{ request.query_params.get("error") }}</div>
+        </div>
+      {% endif %}
+
+      <form class="grid grid-cols-1 lg:grid-cols-12 gap-8" method="post" action="/tracks/{{ 'project-internship' if section_key == 'project_internship' else 'research-internship' }}/apply" id="track-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+
+        <aside class="lg:col-span-4">
+          <div class="sticky top-28 bg-surface border-2 border-on-surface p-6 shadow-[10px_10px_0_0_rgba(28,27,27,1)]">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="font-label-sm opacity-50 uppercase tracking-widest">Applicant dossier</div>
+                <div class="font-headline-md text-headline-md mt-1">Questionnaire</div>
+              </div>
+              <span class="stamp font-label-sm border-on-surface">{{ (questions_only|length) }} Q</span>
+            </div>
+
+            <div class="mt-6 border-t border-outline-variant pt-6">
+              <div class="flex items-center justify-between font-body-md text-body-md">
+                <span class="opacity-70">Progress</span>
+                <span class="font-label-md font-bold"><span id="q-done">0</span>/<span id="q-total">{{ questions_only|length }}</span></span>
+              </div>
+              <div class="mt-3 w-full bg-surface-container-lowest border-2 border-on-surface h-4">
+                <div id="q-bar" class="bg-primary h-full" style="width:0%"></div>
+              </div>
+              <div class="mt-4 font-label-sm opacity-70">
+                Tip: sections split the form. Use the scroll box on the right.
+              </div>
+            </div>
+
+            <div class="mt-6 border-t border-outline-variant pt-6 space-y-2">
+              <div class="font-label-sm opacity-50 uppercase tracking-widest mb-2">Jump</div>
+              {% set sec_idx = 0 %}
+              {% for it in (items or []) %}
+                {% if (it.item_type if it.item_type is defined else 'question') == 'section' %}
+                  {% set sec_idx = sec_idx + 1 %}
+                  <button type="button" class="w-full text-left border border-outline-variant px-4 py-3 hover:bg-surface-container-high transition-colors" data-jump="{{ sec_idx }}">
+                    <span class="font-label-sm opacity-70">S{{ sec_idx }}</span>
+                    <span class="font-label-md font-bold ml-2">{{ it.title }}</span>
+                  </button>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="mt-6">
+              <button class="w-full bg-tertiary text-white border-2 border-on-surface px-6 py-3 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit" {% if not (questions_only) %}disabled{% endif %}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <div class="lg:col-span-8">
+          <div class="bg-surface border-2 border-on-surface shadow-[12px_12px_0_0_rgba(28,27,27,1)] overflow-hidden">
+            <div class="px-6 py-4 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between gap-4 flex-wrap">
+              <div class="font-label-sm uppercase tracking-widest opacity-70">
+                Scroll box â€¢ snaps to cards
+              </div>
+              <div class="font-label-sm opacity-70">
+                Resume pulled from profile â€¢ autosave in your browser (soon)
+              </div>
+            </div>
+
+            <div id="q-scroll" class="p-6 sm:p-8 max-h-[72vh] overflow-y-auto scroll-smooth space-y-6 bg-surface-container-lowest snap-y snap-mandatory">
+              {% set section_counter = 0 %}
+              {% set question_counter = 0 %}
+              {% for it in (items or [])|sort(attribute='order') %}
+                {% set t = (it.item_type if it.item_type is defined else 'question') %}
+                {% if t == 'section' %}
+                  {% set section_counter = section_counter + 1 %}
+                  <div class="border-2 border-on-surface bg-surface p-6 sticky top-0 z-10" id="sec-{{ section_counter }}">
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                      <div>
+                        <div class="font-label-sm opacity-60 uppercase tracking-widest">Section {{ section_counter }}</div>
+                        <div class="font-headline-md text-headline-md mt-2">{{ it.title }}</div>
+                        {% if it.help_text %}
+                          <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
+                        {% endif %}
+                      </div>
+                      <span class="stamp font-label-sm border-on-surface">S{{ section_counter }}</span>
+                    </div>
+                  </div>
+                {% else %}
+                  {% set question_counter = question_counter + 1 %}
+                  <div class="border-2 border-on-surface bg-surface p-6 snap-start" data-qcard="1">
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <div class="font-label-sm opacity-60 uppercase tracking-widest mb-2">Q{{ question_counter }}</div>
+                        <div class="font-headline-md text-headline-md">{{ it.title }}</div>
+                        {% if it.help_text %}
+                          <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
+                        {% endif %}
+                      </div>
+                      <div class="flex items-center gap-2">
+                        {% if it.required %}
+                          <span class="stamp font-label-sm text-primary border-primary">REQUIRED</span>
+                        {% else %}
+                          <span class="stamp font-label-sm border-on-surface opacity-70">OPTIONAL</span>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <div class="mt-6">
+                      {% if it.question_type == "text" %}
+                        <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[140px]" name="q_{{ it.question_id }}" {% if it.required %}required{% endif %}></textarea>
+                      {% elif it.question_type == "single_choice" %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {% for opt in (it.options or []) %}
+                            <label class="flex items-center gap-3 font-body-md text-body-md border border-outline-variant bg-surface-container-lowest px-4 py-3 hover:bg-surface-container-high transition-colors">
+                              <input type="radio" name="q_{{ it.question_id }}" value="{{ opt }}" {% if it.required %}required{% endif %} />
+                              <span>{{ opt }}</span>
+                            </label>
+                          {% endfor %}
+                        </div>
+                      {% elif it.question_type == "multiple_choice" %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {% for opt in (it.options or []) %}
+                            <label class="flex items-center gap-3 font-body-md text-body-md border border-outline-variant bg-surface-container-lowest px-4 py-3 hover:bg-surface-container-high transition-colors">
+                              <input type="checkbox" name="q_{{ it.question_id }}" value="{{ opt }}" />
+                              <span>{{ opt }}</span>
+                            </label>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="mt-6 flex items-center justify-between gap-4 flex-wrap border-t border-outline-variant pt-4">
+                      <div class="font-label-sm opacity-60">Keep going â€” your answers autosave locally on input.</div>
+                      <button type="button" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" data-next="1">
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+
+              {% if not (items or []) %}
+                <div class="border-2 border-on-surface bg-surface p-10">
+                  <div class="font-headline-md text-headline-md uppercase mb-2">No questionnaire configured</div>
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    Please contact the admin to publish a questionnaire for this track.
+                  </p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const totalEl = document.getElementById('q-total');
+      const doneEl = document.getElementById('q-done');
+      const barEl = document.getElementById('q-bar');
+      const scrollEl = document.getElementById('q-scroll');
+      if (!scrollEl || !totalEl || !doneEl || !barEl) return;
+
+      const total = Number(totalEl.textContent || '0') || 0;
+      const storageKey = 'track_q_' + '{{ section_key }}';
+
+      const save = () => {
+        try {
+          const data = {};
+          scrollEl.querySelectorAll('textarea,input[type="radio"],input[type="checkbox"]').forEach(el => {
+            if (!el.name) return;
+            if (el.type === 'radio') {
+              if (el.checked) data[el.name] = el.value;
+            } else if (el.type === 'checkbox') {
+              if (!Array.isArray(data[el.name])) data[el.name] = [];
+              if (el.checked) data[el.name].push(el.value);
+            } else {
+              data[el.name] = el.value || '';
+            }
+          });
+          localStorage.setItem(storageKey, JSON.stringify(data));
+        } catch (_) {}
+      };
+
+      const restore = () => {
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          if (!data || typeof data !== 'object') return;
+          scrollEl.querySelectorAll('textarea,input[type="radio"],input[type="checkbox"]').forEach(el => {
+            if (!el.name) return;
+            const v = data[el.name];
+            if (el.type === 'radio') {
+              el.checked = (String(v || '') === String(el.value || ''));
+            } else if (el.type === 'checkbox') {
+              const arr = Array.isArray(v) ? v.map(String) : [];
+              el.checked = arr.includes(String(el.value || ''));
+            } else {
+              if (typeof v === 'string') el.value = v;
+            }
+          });
+        } catch (_) {}
+      };
+
+      const update = () => {
+        const cards = Array.from(scrollEl.querySelectorAll('[data-qcard=\"1\"]'));
+        let done = 0;
+        for (const card of cards) {
+          const inputs = Array.from(card.querySelectorAll('textarea,input[type=\"radio\"],input[type=\"checkbox\"]'));
+          const nameSet = new Set(inputs.map(i => i.name).filter(Boolean));
+          for (const name of nameSet) {
+            const group = inputs.filter(i => i.name === name);
+            const anyChecked = group.some(i => (i.type === 'checkbox' || i.type === 'radio') ? i.checked : false);
+            const anyText = group.some(i => i.tagName === 'TEXTAREA' && (i.value || '').trim().length > 0);
+            if (anyChecked || anyText) done += 1;
+          }
+        }
+        doneEl.textContent = String(Math.min(done, total));
+        const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
+        barEl.style.width = pct + '%';
+      };
+
+      scrollEl.addEventListener('input', update);
+      scrollEl.addEventListener('change', update);
+      scrollEl.addEventListener('input', save);
+      scrollEl.addEventListener('change', save);
+      restore();
+      update();
+
+      // Next buttons: scroll to next card inside the box
+      scrollEl.querySelectorAll('[data-next=\"1\"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('[data-qcard=\"1\"]');
+          if (!card) return;
+          const next = card.nextElementSibling;
+          if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Jump buttons: scroll to section header
+      document.querySelectorAll('[data-jump]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-jump');
+          const target = document.getElementById('sec-' + id);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    })();
+  </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="py-20">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-10">
+        <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
+        <h1 class="font-headline-lg text-headline-lg mt-4">Make questionnaire</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Build track questionnaires and tag them to a section.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for s in sections %}
+          <div class="bg-surface border-2 border-on-surface p-8">
+            <div class="flex items-start justify-between gap-6">
+              <div>
+                <div class="font-label-sm opacity-50 uppercase mb-1">SECTION</div>
+                <div class="font-headline-md text-headline-md">{{ s.label }}</div>
+                <div class="font-body-md text-body-md text-on-surface-variant mt-2">
+                  {% if s.exists %}
+                    {{ s.count }} questions â€¢ last updated {{ s.updated_at }}
+                  {% else %}
+                    Not configured
+                  {% endif %}
+                </div>
+              </div>
+              <span class="stamp font-label-sm {% if s.exists %}text-primary border-primary{% else %}border-on-surface{% endif %}">
+                {{ "READY" if s.exists else "EMPTY" }}
+              </span>
+            </div>
+
+            <div class="mt-8 flex gap-3 flex-wrap">
+              <a class="bg-tertiary text-white border-2 border-on-surface px-6 py-3 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" href="/admin/questionnaires/{{ s.section }}">
+                Edit questionnaire
+              </a>
+              <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/tracks/admin-preview/{{ s.section }}">
+                Preview
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
