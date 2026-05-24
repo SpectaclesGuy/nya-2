@@ -67,7 +67,7 @@ async def track_apply_get(request: Request, section: str, user=Depends(require_r
         "tracks/apply.html",
         {
             "user": user,
-            "page_title": f"for” {_section_label(section_key)}",
+            "page_title": f"Apply - {_section_label(section_key)}",
             "section_key": section_key,
             "section_label": _section_label(section_key),
             "items": items,
@@ -190,7 +190,7 @@ async def _track_questions_preview(request: Request, section: str, user=Depends(
         "tracks/apply.html",
         {
             "user": user,
-            "page_title": f"Preview â€” {_section_label(section)}",
+            "page_title": f"Preview - {_section_label(section)}",
             "section_key": section,
             "section_label": _section_label(section),
             "items": items,

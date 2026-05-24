@@ -156,11 +156,8 @@
                       {% endif %}
                     </div>
 
-                    <div class="mt-6 flex items-center justify-between gap-4 flex-wrap border-t border-outline-variant pt-4">
-                      <div class="font-label-sm opacity-60"></div>
-                      <button type="button" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" data-next="1">
-                        Next
-                      </button>
+                    <div class="mt-6 border-t border-outline-variant pt-4 font-label-sm opacity-60">
+                      Keep going â€” your answers autosave locally on input.
                     </div>
                   </div>
                 {% endif %}
@@ -255,16 +252,6 @@
       scrollEl.addEventListener('change', save);
       restore();
       update();
-
-      // Next buttons: scroll to next card inside the box
-      scrollEl.querySelectorAll('[data-next=\"1\"]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const card = btn.closest('[data-qcard=\"1\"]');
-          if (!card) return;
-          const next = card.nextElementSibling;
-          if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      });
 
       // Jump buttons: scroll to section header
       document.querySelectorAll('[data-jump]').forEach(btn => {
