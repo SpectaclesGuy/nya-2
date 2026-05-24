@@ -14,7 +14,6 @@
           <span class="stamp font-label-sm text-primary border-primary">APPLY</span>
           <h1 class="font-headline-lg text-headline-lg mt-4">{{ section_label }}</h1>
           <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-3xl">
-            Long forms donâ€™t have to feel long. Scroll inside the dossier, not the whole page.
           </p>
         </div>
         <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors" href="/tracks/{{ 'project-internship' if section_key == 'project_internship' else 'research-internship' }}">
@@ -55,14 +54,22 @@
               </div>
             </div>
 
+            <div class="mt-6 border-t border-outline-variant pt-6">
+              <div class="font-label-sm opacity-50 uppercase tracking-widest mb-2">Resume</div>
+              <a class="border-2 border-on-surface bg-surface px-4 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center w-full" href="/candidate/resume">
+                Download your resume
+              </a>
+              <div class="mt-2 font-label-sm opacity-60">Pulled from your profile.</div>
+            </div>
+
             <div class="mt-6 border-t border-outline-variant pt-6 space-y-2">
               <div class="font-label-sm opacity-50 uppercase tracking-widest mb-2">Jump</div>
-              {% set sec_idx = 0 %}
-              {% for it in (items or []) %}
+              {% set ns = namespace(sec_idx=0) %}
+              {% for it in (items or [])|sort(attribute='order') %}
                 {% if (it.item_type if it.item_type is defined else 'question') == 'section' %}
-                  {% set sec_idx = sec_idx + 1 %}
-                  <button type="button" class="w-full text-left border border-outline-variant px-4 py-3 hover:bg-surface-container-high transition-colors" data-jump="{{ sec_idx }}">
-                    <span class="font-label-sm opacity-70">S{{ sec_idx }}</span>
+                  {% set ns.sec_idx = ns.sec_idx + 1 %}
+                  <button type="button" class="w-full text-left border border-outline-variant px-4 py-3 hover:bg-surface-container-high transition-colors" data-jump="{{ ns.sec_idx }}">
+                    <span class="font-label-sm opacity-70">S{{ ns.sec_idx }}</span>
                     <span class="font-label-md font-bold ml-2">{{ it.title }}</span>
                   </button>
                 {% endif %}
@@ -81,38 +88,36 @@
           <div class="bg-surface border-2 border-on-surface shadow-[12px_12px_0_0_rgba(28,27,27,1)] overflow-hidden">
             <div class="px-6 py-4 bg-surface-container-low border-b-2 border-on-surface flex items-center justify-between gap-4 flex-wrap">
               <div class="font-label-sm uppercase tracking-widest opacity-70">
-                Scroll box â€¢ snaps to cards
+                Questions
               </div>
               <div class="font-label-sm opacity-70">
-                Resume pulled from profile â€¢ autosave in your browser (soon)
               </div>
             </div>
 
             <div id="q-scroll" class="p-6 sm:p-8 max-h-[72vh] overflow-y-auto scroll-smooth space-y-6 bg-surface-container-lowest snap-y snap-mandatory">
-              {% set section_counter = 0 %}
-              {% set question_counter = 0 %}
+              {% set ns2 = namespace(section_counter=0, question_counter=0) %}
               {% for it in (items or [])|sort(attribute='order') %}
                 {% set t = (it.item_type if it.item_type is defined else 'question') %}
                 {% if t == 'section' %}
-                  {% set section_counter = section_counter + 1 %}
-                  <div class="border-2 border-on-surface bg-surface p-6 sticky top-0 z-10" id="sec-{{ section_counter }}">
+                  {% set ns2.section_counter = ns2.section_counter + 1 %}
+                  <div class="border-2 border-on-surface bg-primary-fixed p-6 border-l-[10px] border-l-primary snap-start scroll-mt-6" id="sec-{{ ns2.section_counter }}">
                     <div class="flex items-center justify-between gap-4 flex-wrap">
                       <div>
-                        <div class="font-label-sm opacity-60 uppercase tracking-widest">Section {{ section_counter }}</div>
+                        <div class="font-label-sm opacity-60 uppercase tracking-widest">Section {{ ns2.section_counter }}</div>
                         <div class="font-headline-md text-headline-md mt-2">{{ it.title }}</div>
                         {% if it.help_text %}
                           <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
                         {% endif %}
                       </div>
-                      <span class="stamp font-label-sm border-on-surface">S{{ section_counter }}</span>
+                      <span class="stamp font-label-sm border-on-surface">S{{ ns2.section_counter }}</span>
                     </div>
                   </div>
                 {% else %}
-                  {% set question_counter = question_counter + 1 %}
+                  {% set ns2.question_counter = ns2.question_counter + 1 %}
                   <div class="border-2 border-on-surface bg-surface p-6 snap-start" data-qcard="1">
                     <div class="flex items-start justify-between gap-4">
                       <div>
-                        <div class="font-label-sm opacity-60 uppercase tracking-widest mb-2">Q{{ question_counter }}</div>
+                        <div class="font-label-sm opacity-60 uppercase tracking-widest mb-2">Q{{ ns2.question_counter }}</div>
                         <div class="font-headline-md text-headline-md">{{ it.title }}</div>
                         {% if it.help_text %}
                           <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
@@ -152,7 +157,7 @@
                     </div>
 
                     <div class="mt-6 flex items-center justify-between gap-4 flex-wrap border-t border-outline-variant pt-4">
-                      <div class="font-label-sm opacity-60">Keep going â€” your answers autosave locally on input.</div>
+                      <div class="font-label-sm opacity-60"></div>
                       <button type="button" class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" data-next="1">
                         Next
                       </button>
@@ -266,7 +271,10 @@
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-jump');
           const target = document.getElementById('sec-' + id);
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (!target) return;
+          // Scroll within the questionnaire box (avoid snap skipping non-snap targets).
+          const top = target.offsetTop - 16;
+          scrollEl.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
         });
       });
     })();

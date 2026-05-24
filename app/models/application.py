@@ -25,6 +25,8 @@ class ApplicationInDb(BaseModel):
     alternate_email: str
     resume_url: str | None = None
     resume_public_id: str | None = None
+    track_section: str | None = None
+    questionnaire_items: list[dict] = Field(default_factory=list)
     answers: list[ApplicationAnswer] = Field(default_factory=list)
     status: ApplicationStatus = "submitted"
     created_at: datetime = Field(default_factory=datetime.utcnow)

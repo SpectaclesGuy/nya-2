@@ -67,7 +67,7 @@ async def track_apply_get(request: Request, section: str, user=Depends(require_r
         "tracks/apply.html",
         {
             "user": user,
-            "page_title": f"Apply â€” {_section_label(section_key)}",
+            "page_title": f"for” {_section_label(section_key)}",
             "section_key": section_key,
             "section_label": _section_label(section_key),
             "items": items,
@@ -100,7 +100,18 @@ async def track_apply_post(request: Request, section: str, user=Depends(require_
 
     qdoc = await TrackQuestionnaireService.get_by_section(section=section_key)
     items = (qdoc or {}).get("items") or (qdoc or {}).get("questions") or []
-    questions = [i for i in items if str((i or {}).get("item_type") or "question") == "question"]
+    # Normalize to item list with item_type
+    normalized_items: list[dict] = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        t = str(it.get("item_type") or "question")
+        if t not in {"section", "question"}:
+            t = "question"
+        out = dict(it)
+        out["item_type"] = t
+        normalized_items.append(out)
+    questions = [i for i in normalized_items if str((i or {}).get("item_type") or "question") == "question"]
 
     form = await request.form()
     answers_out: list[dict] = []
@@ -159,6 +170,8 @@ async def track_apply_post(request: Request, section: str, user=Depends(require_
             "alternate_email": alternate_email,
             "resume_url": resume_url or None,
             "resume_public_id": resume_public_id or None,
+            "track_section": section_key,
+            "questionnaire_items": normalized_items,
             "answers": answers_out,
             "status": "submitted",
         }

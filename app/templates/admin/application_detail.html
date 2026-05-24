@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <section class="py-20">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto">
       <div class="mb-10">
         <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
         <h1 class="font-headline-lg text-headline-lg mt-4">Application</h1>
@@ -14,50 +14,115 @@
         <div class="flex items-center justify-between gap-6 flex-wrap">
           <div>
             <div class="font-label-sm opacity-50 uppercase">Candidate</div>
-            <div class="font-headline-md text-headline-md">{{ application.candidate_name or "—" }}</div>
-            <div class="font-body-md text-body-md text-on-surface-variant">{{ application.candidate_email or "—" }}</div>
+            <div class="font-headline-md text-headline-md">{{ application.candidate_name or "â€”" }}</div>
+            <div class="font-body-md text-body-md text-on-surface-variant">{{ application.candidate_email or "â€”" }}</div>
+            <div class="font-body-md text-body-md text-on-surface-variant mt-1">
+              Phone: <span class="font-label-md font-bold">{{ application.candidate_phone or "â€”" }}</span>
+              â€¢ Alt: <span class="font-label-md font-bold">{{ application.alternate_email or "â€”" }}</span>
+            </div>
+            {% if application.track_section %}
+              <div class="mt-3">
+                <span class="stamp font-label-sm border-on-surface">{{ application.track_section }}</span>
+              </div>
+            {% endif %}
           </div>
           <div class="text-right">
             <div class="font-label-sm opacity-50 uppercase">Status</div>
             <div class="stamp font-label-sm border-on-surface">{{ application.status }}</div>
+            <div class="mt-4 font-label-sm opacity-50 uppercase">Submitted</div>
+            <div class="font-body-md text-body-md">{{ application.created_at or "â€”" }}</div>
           </div>
         </div>
-        {% if application.resume_url %}
+
+        {% if application.resume_url or application.resume_public_id %}
           <div class="pt-4 border-t border-outline-variant">
             <div class="flex flex-wrap gap-3">
-              <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="{{ application.resume_url }}" target="_blank" rel="noopener noreferrer">
-                Open resume (direct)
-              </a>
+              {% if application.resume_url %}
+                <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="{{ application.resume_url }}" target="_blank" rel="noopener noreferrer">
+                  Open resume (direct)
+                </a>
+              {% endif %}
               <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors inline-flex items-center justify-center" href="/admin/applications/{{ application._id }}/resume">
                 Download resume
               </a>
-            </div>
-            <div class="font-label-sm text-label-sm opacity-60 mt-3">
-              If it doesn’t open in-browser, it should download. Ensure Cloudinary is configured and the upload succeeded.
             </div>
           </div>
         {% endif %}
       </div>
 
+      {% set ans_map = {} %}
+      {% for ans in (application.answers or []) %}
+        {% set _ = ans_map.update({ (ans.question_id|string): ans }) %}
+      {% endfor %}
+      {% set items = application.questionnaire_items or [] %}
+
       <div class="mt-10 space-y-6">
-        {% for ans in (application.answers or []) %}
-          <div class="bg-surface border-2 border-on-surface p-8">
-            <div class="font-headline-md text-headline-md">{{ ans.question_text }}</div>
-            <div class="font-label-sm opacity-50 uppercase mt-2">{{ ans.question_type }}</div>
-            <div class="mt-6 border-t border-outline-variant pt-6">
-              {% if ans.answer is string %}
-                <div class="font-body-md text-body-md whitespace-pre-wrap">{{ ans.answer or "—" }}</div>
-              {% else %}
-                <ul class="list-disc pl-6 space-y-1">
-                  {% for v in ans.answer %}
-                    <li class="font-body-md text-body-md">{{ v }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
+        {% if items %}
+          {% set sec = 0 %}
+          {% for it in (items or [])|sort(attribute='order') %}
+            {% set t = (it.item_type if it.item_type is defined else 'question') %}
+            {% if t == 'section' %}
+              {% set sec = sec + 1 %}
+              <div class="bg-surface border-2 border-on-surface p-8">
+                <div class="flex items-start justify-between gap-6 flex-wrap">
+                  <div>
+                    <div class="font-label-sm opacity-50 uppercase">Section {{ sec }}</div>
+                    <div class="font-headline-md text-headline-md mt-2">{{ it.title }}</div>
+                    {% if it.help_text %}
+                      <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
+                    {% endif %}
+                  </div>
+                  <span class="stamp font-label-sm border-on-surface">SECTION</span>
+                </div>
+              </div>
+            {% else %}
+              {% set qid = (it.question_id|string) %}
+              {% set a = ans_map.get(qid) %}
+              <div class="bg-surface border-2 border-on-surface p-8">
+                <div class="font-headline-md text-headline-md">{{ it.title }}</div>
+                <div class="font-label-sm opacity-50 uppercase mt-2">{{ it.question_type }}</div>
+                {% if it.help_text %}
+                  <div class="font-body-md text-body-md text-on-surface-variant mt-2">{{ it.help_text }}</div>
+                {% endif %}
+                <div class="mt-6 border-t border-outline-variant pt-6">
+                  {% if a %}
+                    {% if a.answer is string %}
+                      <div class="font-body-md text-body-md whitespace-pre-wrap">{{ a.answer or "â€”" }}</div>
+                    {% else %}
+                      <ul class="list-disc pl-6 space-y-1">
+                        {% for v in a.answer %}
+                          <li class="font-body-md text-body-md">{{ v }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  {% else %}
+                    <div class="font-body-md text-body-md opacity-60">â€”</div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for ans in (application.answers or []) %}
+            <div class="bg-surface border-2 border-on-surface p-8">
+              <div class="font-headline-md text-headline-md">{{ ans.question_text }}</div>
+              <div class="font-label-sm opacity-50 uppercase mt-2">{{ ans.question_type }}</div>
+              <div class="mt-6 border-t border-outline-variant pt-6">
+                {% if ans.answer is string %}
+                  <div class="font-body-md text-body-md whitespace-pre-wrap">{{ ans.answer or "â€”" }}</div>
+                {% else %}
+                  <ul class="list-disc pl-6 space-y-1">
+                    {% for v in ans.answer %}
+                      <li class="font-body-md text-body-md">{{ v }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   </section>
 {% endblock %}
+

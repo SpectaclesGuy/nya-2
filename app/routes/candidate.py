@@ -266,6 +266,34 @@ async def application_resume(request: Request, application_id: str, user=Depends
     return StreamingResponse(iter([content]), headers=headers, media_type="application/pdf")
 
 
+@router.get("/resume")
+async def profile_resume(request: Request, user=Depends(require_role("candidate"))):
+    if not user.get("id"):
+        return RedirectResponse("/candidate/profile?error=db", status_code=302)
+
+    user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
+    resume_url = str((user_doc or {}).get("resume_url") or "")
+    resume_public_id = str((user_doc or {}).get("resume_public_id") or "")
+    if not resume_url and not resume_public_id:
+        return RedirectResponse("/candidate/profile?error=resume_required", status_code=302)
+
+    async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
+        r = await client.get(resume_url) if resume_url else None
+        if (not r) or (r.status_code in (401, 403, 404) and resume_public_id):
+            signed = UploadService.signed_resume_url(public_id=resume_public_id, expires_in_seconds=300)
+            r = await client.get(signed)
+        r.raise_for_status()
+        content = r.content
+
+    headers = {
+        "Content-Disposition": 'attachment; filename="resume_profile.pdf"',
+        "Content-Type": "application/pdf",
+    }
+    from fastapi.responses import StreamingResponse
+
+    return StreamingResponse(iter([content]), headers=headers, media_type="application/pdf")
+
+
 @router.get("/complete-profile", response_class=HTMLResponse)
 async def complete_profile_get(request: Request, user=Depends(require_role("candidate"))):
     if user.get("profile_completed"):

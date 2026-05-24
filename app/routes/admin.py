@@ -536,21 +536,23 @@ async def application_detail_admin(request: Request, application_id: str, user=D
 @router.get("/applications/{application_id}/resume")
 async def application_resume_admin(request: Request, application_id: str, user=Depends(require_role("admin"))):
     app_doc = await ApplicationService.get_application_admin(application_id=application_id)
-    if not app_doc or not app_doc.get("resume_url"):
+    if not app_doc or (not app_doc.get("resume_url") and not app_doc.get("resume_public_id")):
         return RedirectResponse("/admin/submissions?error=resume", status_code=302)
 
-    resume_url = str(app_doc.get("resume_url"))
+    resume_url = str(app_doc.get("resume_url") or "")
     resume_public_id = str(app_doc.get("resume_public_id") or "")
 
     # Proxy download through our backend to avoid browser/Cloudinary oddities.
     async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
         # Try stored URL first (often works once PDF delivery is enabled in Cloudinary).
-        r = await client.get(resume_url)
-        if r.status_code in (401, 403, 404) and resume_public_id:
+        r = await client.get(resume_url) if resume_url else None
+        if (not r) or (r.status_code in (401, 403, 404) and resume_public_id):
             from app.services.upload_service import UploadService
 
             signed = UploadService.signed_resume_url(public_id=resume_public_id, expires_in_seconds=300)
             r = await client.get(signed)
+        if not r:
+            raise RuntimeError("Resume missing")
         r.raise_for_status()
         content = r.content
 
