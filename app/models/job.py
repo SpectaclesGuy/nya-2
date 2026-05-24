@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 JobStatus = Literal["draft", "published", "closed"]
 QuestionType = Literal["text", "single_choice", "multiple_choice"]
+PostingType = Literal["project_internship", "research_internship"]
 
 
 class JobQuestion(BaseModel):
@@ -21,6 +22,7 @@ class JobQuestion(BaseModel):
 
 
 class JobInDb(BaseModel):
+    type: PostingType = "project_internship"
     title: str
     company_or_team: str
     location: str

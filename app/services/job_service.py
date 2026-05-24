@@ -17,11 +17,14 @@ class JobService:
         return [doc async for doc in cursor]
 
     @staticmethod
-    async def list_published_jobs(limit: int = 200) -> list[dict]:
+    async def list_published_jobs(limit: int = 200, *, type: str | None = None) -> list[dict]:
         db = get_db()
+        query: dict = {"status": "published"}
+        if type in {"project_internship", "research_internship"}:
+            query["type"] = type
         cursor = (
             db["jobs"]
-            .find({"status": "published"})
+            .find(query)
             .sort([("updated_at", -1)])
             .limit(limit)
         )

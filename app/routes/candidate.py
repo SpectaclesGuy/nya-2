@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
@@ -18,6 +20,11 @@ from app.core.templates import templates
 
 router = APIRouter(prefix="/candidate", tags=["candidate"])
 
+def _safe_session_value(v):
+    if isinstance(v, datetime):
+        return v.isoformat()
+    return v
+
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request, user=Depends(require_role("candidate"))):
@@ -31,18 +38,49 @@ async def dashboard(request: Request, user=Depends(require_role("candidate"))):
 @router.get("/profile", response_class=HTMLResponse)
 async def profile_get(request: Request, user=Depends(require_role("candidate"))):
     # Refresh user from DB for accurate prefill.
+    view_user = dict(user)
     try:
         user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
         if user_doc:
-            user["name"] = user_doc.get("name")
-            user["phone_number"] = user_doc.get("phone_number")
-            user["alternate_email"] = user_doc.get("alternate_email")
+            for k in (
+                "name",
+                "phone_number",
+                "alternate_email",
+                "current_city",
+                "current_country",
+                "linkedin_url",
+                "date_of_birth",
+                "gender",
+                "nationality",
+                "address",
+                "postal_code",
+                "university",
+                "degree",
+                "major",
+                "graduation_year",
+                "gpa",
+                "experience_level",
+                "years_of_experience",
+                "skills",
+                "experience_summary",
+                "github_url",
+                "portfolio_url",
+                "other_links",
+                "available_from",
+                "hours_per_week",
+                "work_mode",
+                "notice_period_weeks",
+                "resume_url",
+                "resume_updated_at",
+            ):
+                if k in user_doc:
+                    view_user[k] = _safe_session_value(user_doc.get(k))
     except Exception:
         pass
     return templates.TemplateResponse(
         request,
         "candidate/profile.html",
-        {"user": user, "page_title": "Your Profile"},
+        {"user": view_user, "page_title": "Your Profile"},
     )
 
 
@@ -54,21 +92,67 @@ async def profile_post(request: Request, user=Depends(require_role("candidate"))
         return RedirectResponse("/candidate/profile?error=csrf", status_code=302)
 
     form = await request.form()
+    resume_file = form.get("resume")
+
+    other_links_raw = str(form.get("other_links") or "")
+    other_links_raw = other_links_raw.replace("\r", "").replace("\n", ",")
+    skills_raw = str(form.get("skills") or "")
+    skills_raw = skills_raw.replace("\r", "").replace("\n", ",")
+
     try:
         payload = CandidateProfileUpdate(
             name=str(form.get("name") or ""),
             phone_number=str(form.get("phone_number") or ""),
             alternate_email=str(form.get("alternate_email") or ""),
+            current_city=form.get("current_city"),
+            current_country=form.get("current_country"),
+            linkedin_url=form.get("linkedin_url"),
+            date_of_birth=form.get("date_of_birth"),
+            gender=form.get("gender"),
+            nationality=form.get("nationality"),
+            address=form.get("address"),
+            postal_code=form.get("postal_code"),
+            university=form.get("university"),
+            degree=form.get("degree"),
+            major=form.get("major"),
+            graduation_year=form.get("graduation_year"),
+            gpa=form.get("gpa"),
+            experience_level=form.get("experience_level"),
+            years_of_experience=form.get("years_of_experience"),
+            skills=skills_raw,
+            experience_summary=form.get("experience_summary"),
+            github_url=form.get("github_url"),
+            portfolio_url=form.get("portfolio_url"),
+            other_links=other_links_raw,
+            available_from=form.get("available_from"),
+            hours_per_week=form.get("hours_per_week"),
+            work_mode=form.get("work_mode"),
+            notice_period_weeks=form.get("notice_period_weeks") or None,
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/profile?error=validation", status_code=302)
 
+    update_data = payload.model_dump()
+
+    # Handle resume upload separately (file).
+    if resume_file and getattr(resume_file, "filename", None):
+        if not user.get("id"):
+            return RedirectResponse("/candidate/profile?error=db", status_code=302)
+        try:
+            resume_url, resume_public_id = await UploadService.upload_profile_resume_pdf(
+                file=resume_file, user_id=str(user.get("id"))
+            )
+            update_data["resume_url"] = resume_url
+            update_data["resume_public_id"] = resume_public_id
+            update_data["resume_updated_at"] = datetime.utcnow()
+        except Exception:
+            return RedirectResponse("/candidate/profile?error=resume", status_code=302)
+
     try:
-        updated = await UserService.complete_candidate_profile(
+        updated = await UserService.upsert_candidate_profile(
             login_email=str(user.get("login_email") or ""),
-            name=payload.name,
-            phone_number=payload.phone_number,
-            alternate_email=str(payload.alternate_email),
+            data=update_data,
+            profile_completed=True,
         )
     except RuntimeError:
         return RedirectResponse("/candidate/profile?error=db", status_code=302)
@@ -157,10 +241,49 @@ async def application_resume(request: Request, application_id: str, user=Depends
 async def complete_profile_get(request: Request, user=Depends(require_role("candidate"))):
     if user.get("profile_completed"):
         return RedirectResponse("/candidate/dashboard", status_code=302)
+    view_user = dict(user)
+    try:
+        user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
+        if user_doc:
+            for k in (
+                "name",
+                "phone_number",
+                "alternate_email",
+                "current_city",
+                "current_country",
+                "linkedin_url",
+                "date_of_birth",
+                "gender",
+                "nationality",
+                "address",
+                "postal_code",
+                "university",
+                "degree",
+                "major",
+                "graduation_year",
+                "gpa",
+                "experience_level",
+                "years_of_experience",
+                "skills",
+                "experience_summary",
+                "github_url",
+                "portfolio_url",
+                "other_links",
+                "available_from",
+                "hours_per_week",
+                "work_mode",
+                "notice_period_weeks",
+                "resume_url",
+                "resume_updated_at",
+            ):
+                if k in user_doc:
+                    view_user[k] = _safe_session_value(user_doc.get(k))
+    except Exception:
+        pass
     return templates.TemplateResponse(
         request,
         "candidate/complete_profile.html",
-        {"user": user, "page_title": "Complete Profile"},
+        {"user": view_user, "page_title": "Complete Profile"},
     )
 
 
@@ -172,20 +295,64 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
         return RedirectResponse("/candidate/complete-profile?error=csrf", status_code=302)
 
     form = await request.form()
+    resume_file = form.get("resume")
+
+    other_links_raw = str(form.get("other_links") or "")
+    other_links_raw = other_links_raw.replace("\r", "").replace("\n", ",")
+    skills_raw = str(form.get("skills") or "")
+    skills_raw = skills_raw.replace("\r", "").replace("\n", ",")
     try:
         payload = CandidateProfileUpdate(
             name=str(form.get("name") or ""),
             phone_number=str(form.get("phone_number") or ""),
             alternate_email=str(form.get("alternate_email") or ""),
+            current_city=form.get("current_city"),
+            current_country=form.get("current_country"),
+            linkedin_url=form.get("linkedin_url"),
+            date_of_birth=form.get("date_of_birth"),
+            gender=form.get("gender"),
+            nationality=form.get("nationality"),
+            address=form.get("address"),
+            postal_code=form.get("postal_code"),
+            university=form.get("university"),
+            degree=form.get("degree"),
+            major=form.get("major"),
+            graduation_year=form.get("graduation_year"),
+            gpa=form.get("gpa"),
+            experience_level=form.get("experience_level"),
+            years_of_experience=form.get("years_of_experience"),
+            skills=skills_raw,
+            experience_summary=form.get("experience_summary"),
+            github_url=form.get("github_url"),
+            portfolio_url=form.get("portfolio_url"),
+            other_links=other_links_raw,
+            available_from=form.get("available_from"),
+            hours_per_week=form.get("hours_per_week"),
+            work_mode=form.get("work_mode"),
+            notice_period_weeks=form.get("notice_period_weeks") or None,
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/complete-profile?error=validation", status_code=302)
+
+    update_data = payload.model_dump()
+
+    if resume_file and getattr(resume_file, "filename", None):
+        if not user.get("id"):
+            return RedirectResponse("/candidate/complete-profile?error=db", status_code=302)
+        try:
+            resume_url, resume_public_id = await UploadService.upload_profile_resume_pdf(
+                file=resume_file, user_id=str(user.get("id"))
+            )
+            update_data["resume_url"] = resume_url
+            update_data["resume_public_id"] = resume_public_id
+            update_data["resume_updated_at"] = datetime.utcnow()
+        except Exception:
+            return RedirectResponse("/candidate/complete-profile?error=resume", status_code=302)
     try:
-        updated = await UserService.complete_candidate_profile(
+        updated = await UserService.upsert_candidate_profile(
             login_email=str(user.get("login_email") or ""),
-            name=payload.name,
-            phone_number=payload.phone_number,
-            alternate_email=str(payload.alternate_email),
+            data=update_data,
+            profile_completed=True,
         )
     except RuntimeError:
         return RedirectResponse("/candidate/complete-profile?error=db", status_code=302)

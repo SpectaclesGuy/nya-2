@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-  <section class="py-16">
-    <div class="max-w-xl">
-      <div class="mb-6">
-        <span class="stamp font-label-sm text-primary border-primary">REQUIRED</span>
+  <section class="py-12">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+        <div>
+          <span class="stamp font-label-sm text-primary border-primary">REQUIRED</span>
+          <h1 class="font-headline-lg text-headline-lg mt-4">Complete your profile</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-3xl">
+            Complete this once before applying. Your login email is locked:
+            <span class="font-label-md font-bold">{{ user.login_email }}</span>.
+          </p>
+        </div>
       </div>
-      <h1 class="font-headline-lg text-headline-lg mb-4">Complete your profile</h1>
-      <p class="font-body-md text-body-md text-on-surface-variant">
-        You must complete this once before applying. Your login email is locked:
-        <span class="font-label-md font-bold">{{ user.login_email }}</span>.
-      </p>
 
       {% if request.query_params.get("error") %}
-        <div class="mt-6 border-2 border-on-surface bg-error-container p-4">
-          <div class="font-label-md font-bold">Couldn’t save profile.</div>
+        <div class="mb-8 border-2 border-on-surface bg-error-container p-4">
+          <div class="font-label-md font-bold">Couldnâ€™t save profile.</div>
           <div class="font-body-md text-body-md text-on-surface-variant">
             {% if request.query_params.get("error") == "csrf" %}
               Please refresh and try again.
@@ -21,6 +23,10 @@
               Database is not configured. Set <span class="font-label-md">MONGODB_URI</span> and restart.
             {% elif request.query_params.get("error") == "validation" %}
               Check the fields and try again.
+            {% elif request.query_params.get("error") == "resume" %}
+              Resume upload failed. Please upload a PDF (max 5MB) and try again.
+            {% elif request.query_params.get("error") == "resume_required" %}
+              Please upload your resume in section <span class="font-label-md">06</span> to apply for jobs.
             {% else %}
               Please try again.
             {% endif %}
@@ -28,55 +34,270 @@
         </div>
       {% endif %}
 
-      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-6" method="post" action="/candidate/complete-profile">
+      <form class="grid grid-cols-1 lg:grid-cols-12 gap-8" method="post" action="/candidate/complete-profile" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
-        <div>
-          <label class="block font-label-md text-label-md mb-2" for="name">Name</label>
-          <input
-            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
-            id="name"
-            name="name"
-            required
-            minlength="2"
-            maxlength="120"
-            placeholder="Your full name"
-            value="{{ user.name or '' }}"
-          />
+
+        <div class="lg:col-span-8 space-y-8">
+          <div class="bg-surface border-2 border-on-surface shadow-[12px_12px_0_0_rgba(28,27,27,1)] overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              01 / Basic details
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="name">Full name </label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="name" name="name" required minlength="2" maxlength="120" placeholder="e.g., Doe John" value="{{ user.name or '' }}" />
+              </div>
+
+              <div>
+                <div class="block font-label-md text-label-md mb-2">Primary email (locked)</div>
+                <div class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md opacity-80 select-all">
+                  {{ user.login_email }}
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email *</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="alternate_email" name="alternate_email" type="email" required placeholder="personal@gmail.com" value="{{ user.alternate_email or '' }}" />
+              </div>
+
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="phone_number">WhatsApp / Phone *</label>
+                <input
+                  class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
+                  id="phone_number"
+                  name="phone_number"
+                  type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]{10,15}"
+                  minlength="10"
+                  maxlength="15"
+                  required
+                  placeholder="10â€“15 digits"
+                  onkeydown="if(['e','E','+','-','.',','].includes(event.key)) event.preventDefault();"
+                  oninput="this.value=this.value.replace(/\\D/g,'').slice(0,15)"
+                  value="{{ user.phone_number or '' }}"
+                />
+                <div class="font-label-sm text-label-sm opacity-60 mt-2">Digits only (10â€“15).</div>
+              </div>
+
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="current_city">City</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="current_city" name="current_city" maxlength="80" placeholder="City" required value="{{ user.current_city or '' }}" />
+              </div>
+
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="current_country">Country</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="current_country" name="current_country" maxlength="80" placeholder="Country" required value="{{ user.current_country or '' }}" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="linkedin_url">LinkedIn</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="linkedin_url" name="linkedin_url" maxlength="500" placeholder="https://linkedin.com/in/username" required value="{{ user.linkedin_url or '' }}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              02 / Personal details
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="date_of_birth">Date of birth</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required value="{{ user.date_of_birth or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="gender">Gender</label>
+                <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="gender" name="gender" required>
+                  {% set g = user.gender or "" %}
+                  <option value="" disabled {% if g == "" %}selected{% endif %}>Select</option>
+                  <option value="female" {% if g == "female" %}selected{% endif %}>Female</option>
+                  <option value="male" {% if g == "male" %}selected{% endif %}>Male</option>
+                  <option value="non_binary" {% if g == "non_binary" %}selected{% endif %}>Non-binary</option>
+                  <option value="prefer_not_to_say" {% if g == "prefer_not_to_say" %}selected{% endif %}>Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="nationality">Nationality</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="nationality" name="nationality" maxlength="80" placeholder="Nationality" required value="{{ user.nationality or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="postal_code">Postal code</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="postal_code" name="postal_code" maxlength="20" placeholder="Postal code" required value="{{ user.postal_code or '' }}" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="address">Address</label>
+                <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[110px]" id="address" name="address" maxlength="500" placeholder="Street / locality / full address" required>{{ user.address or '' }}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              03 / Academic details
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="university">University / Institution</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="degree">Degree</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="degree" name="degree" maxlength="120" placeholder="e.g., B.Tech" required value="{{ user.degree or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="major">Major</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="major" name="major" maxlength="120" placeholder="e.g., Computer Science" required value="{{ user.major or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="graduation_year">Graduation year</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g., 2026" required value="{{ user.graduation_year or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="gpa">CGPA</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="gpa" name="gpa" maxlength="20" placeholder="e.g., 8.1 / 10" required value="{{ user.gpa or '' }}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              04 / Skills & experience
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="experience_level">Experience level</label>
+                {% set el = user.experience_level or "" %}
+                <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="experience_level" name="experience_level" required>
+                  <option value="" disabled {% if el == "" %}selected{% endif %}>Select</option>
+                  <option value="student" {% if el == "student" %}selected{% endif %}>Student</option>
+                  <option value="intern" {% if el == "intern" %}selected{% endif %}>Intern</option>
+                  <option value="entry" {% if el == "entry" %}selected{% endif %}>Entry</option>
+                  <option value="mid" {% if el == "mid" %}selected{% endif %}>Mid</option>
+                  <option value="senior" {% if el == "senior" %}selected{% endif %}>Senior</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="years_of_experience">Months of experience</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="years_of_experience" name="years_of_experience" type="number" step="0.5" min="0" max="60" placeholder="e.g., 1.5" required value="{{ user.years_of_experience or '' }}" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="skills">Skills (comma separated)</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="skills" name="skills" placeholder="Python, FastAPI, React, MongoDB, ..." required value="{{ (user.skills or [])|join(', ') }}" />
+                <div class="font-label-sm text-label-sm opacity-60 mt-2">Add technologies, tools, frameworks, or keywords.</div>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="experience_summary">Experience summary</label>
+                <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[140px]" id="experience_summary" name="experience_summary" maxlength="2000" placeholder="Briefly describe internships, projects, or relevant experience." required>{{ user.experience_summary or '' }}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              05 / Links & portfolio
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="github_url">GitHub</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="github_url" name="github_url" maxlength="500" placeholder="https://github.com/username" value="{{ user.github_url or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="portfolio_url">Portfolio / Website</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="portfolio_url" name="portfolio_url" maxlength="500" placeholder="https://yourwebsite.com" value="{{ user.portfolio_url or '' }}" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block font-label-md text-label-md mb-2" for="other_links">Other links (one per line)</label>
+                <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[110px]" id="other_links" name="other_links" placeholder="https://scholar.google.com/...\nhttps://behance.net/..." required>{% if user.other_links %}{{ (user.other_links or [])|join('\n') }}{% endif %}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              06 / Resume upload
+            </div>
+            <div class="p-6 sm:p-8 space-y-3">
+              <label class="block font-label-md text-label-md mb-2" for="resume">Upload resume (PDF, max 5MB)</label>
+              <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="resume" name="resume" type="file" accept="application/pdf,.pdf" />
+              {% if user.resume_url %}
+                <div class="font-label-sm text-label-sm opacity-70">
+                  Resume on file{% if user.resume_updated_at %} â€” last updated {{ user.resume_updated_at }}{% endif %}.
+                </div>
+              {% else %}
+                <div class="font-label-sm text-label-sm opacity-70">No resume on file yet.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="bg-surface border-2 border-on-surface overflow-hidden">
+            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
+              07 / Availability
+            </div>
+            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="available_from">Available from</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="available_from" name="available_from" placeholder="YYYY-MM-DD" required value="{{ user.available_from or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="hours_per_week" name="hours_per_week" type="number" min="1" max="80" placeholder="e.g., 20" required value="{{ user.hours_per_week or '' }}" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="work_mode">Work mode</label>
+                {% set wm = user.work_mode or "" %}
+                <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="work_mode" name="work_mode" required>
+                  <option value="" disabled {% if wm == "" %}selected{% endif %}>Select</option>
+                  <option value="remote" {% if wm == "remote" %}selected{% endif %}>Remote</option>
+                  <option value="hybrid" {% if wm == "hybrid" %}selected{% endif %}>Hybrid</option>
+                  <option value="onsite" {% if wm == "onsite" %}selected{% endif %}>On-site</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md mb-2" for="notice_period_weeks">Notice period (weeks)</label>
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="notice_period_weeks" name="notice_period_weeks" type="number" min="0" max="104" placeholder="e.g., 0" value="{{ user.notice_period_weeks or '' }}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-4 flex-wrap">
+            <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
+              Save & continue
+            </button>
+            <a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">Browse jobs</a>
+          </div>
         </div>
-        <div>
-          <label class="block font-label-md text-label-md mb-2" for="phone_number">Phone number</label>
-          <input
-            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
-            id="phone_number"
-            name="phone_number"
-            type="text"
-            inputmode="numeric"
-            pattern="[0-9]{10,15}"
-            minlength="10"
-            maxlength="15"
-            required
-            placeholder="10–15 digits"
-            oninput="this.value=this.value.replace(/\\D/g,'').slice(0,15)"
-          />
-          <div class="font-label-sm text-label-sm opacity-60 mt-2">Digits only (10–15).</div>
-        </div>
-        <div>
-          <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email</label>
-          <input
-            class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
-            id="alternate_email"
-            name="alternate_email"
-            type="email"
-            required
-            placeholder="personal@gmail.com"
-          />
-        </div>
-        <button
-          class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform"
-          type="submit"
-        >
-          Save profile
-        </button>
+
+        <aside class="lg:col-span-4">
+          <div class="sticky top-28 bg-surface border-2 border-on-surface p-6 shadow-[10px_10px_0_0_rgba(28,27,27,1)]">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="font-label-sm opacity-50 uppercase tracking-widest">Applicant dossier</div>
+                <div class="font-headline-md text-headline-md mt-1">Profile setup</div>
+              </div>
+              <span class="stamp font-label-sm border-on-surface">07 sections</span>
+            </div>
+
+            <div class="mt-6 border-t border-outline-variant pt-6 space-y-3">
+              <div class="flex items-center justify-between font-body-md text-body-md">
+                <span class="opacity-70">Status</span>
+                <span class="stamp font-label-sm text-primary border-primary">Pending</span>
+              </div>
+              <div class="font-label-sm opacity-70">
+                Tip: add your resume once here â€” you wonâ€™t need to upload it for each job application.
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <button class="w-full bg-tertiary text-white border-2 border-on-surface px-6 py-3 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
+                Save profile
+              </button>
+              <div class="mt-3 text-center font-label-sm opacity-60">
+                Your data is editable anytime from <span class="font-label-md">Update Profile</span>.
+              </div>
+            </div>
+          </div>
+        </aside>
       </form>
     </div>
   </section>

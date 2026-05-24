@@ -23,6 +23,7 @@ async def connect_to_mongo() -> None:
         await _db["users"].create_index([("role", 1), ("is_active", 1)])
 
         await _db["jobs"].create_index("status")
+        await _db["jobs"].create_index("type")
         await _db["applications"].create_index([("job_id", 1), ("user_id", 1)], unique=True)
         await _db["applications"].create_index("job_id")
         await _db["applications"].create_index("user_id")

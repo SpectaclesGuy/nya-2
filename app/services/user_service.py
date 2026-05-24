@@ -71,17 +71,27 @@ class UserService:
         return doc
 
     @staticmethod
-    async def complete_candidate_profile(*, login_email: str, name: str, phone_number: str, alternate_email: str) -> dict:
+    async def upsert_candidate_profile(
+        *, login_email: str, data: dict, profile_completed: bool = True
+    ) -> dict:
         db = get_db()
         now = datetime.utcnow()
+        set_data = dict(data or {})
+        # Canonical fields.
+        if "alternate_email" in set_data and set_data["alternate_email"]:
+            set_data["alternate_email"] = normalize_email(str(set_data["alternate_email"]))
+        # Always treat these as lists when present.
+        if "skills" in set_data and set_data["skills"] is None:
+            set_data["skills"] = []
+        if "other_links" in set_data and set_data["other_links"] is None:
+            set_data["other_links"] = []
+
         doc = await db["users"].find_one_and_update(
             {"login_email": normalize_email(login_email), "role": "candidate"},
             {
                 "$set": {
-                    "name": name,
-                    "phone_number": phone_number,
-                    "alternate_email": normalize_email(alternate_email),
-                    "profile_completed": True,
+                    **set_data,
+                    "profile_completed": bool(profile_completed),
                     "updated_at": now,
                 }
             },

@@ -107,12 +107,15 @@ async def jobs_create_post(request: Request, user=Depends(require_role("admin"))
 
     form = await request.form()
     data = {
+        "type": str(form.get("type") or "").strip() or "project_internship",
         "title": str(form.get("title") or "").strip(),
         "company_or_team": str(form.get("company_or_team") or "").strip(),
         "location": str(form.get("location") or "").strip(),
         "job_type": str(form.get("job_type") or "").strip(),
         "description": str(form.get("description") or "").strip(),
     }
+    if data["type"] not in {"project_internship", "research_internship"}:
+        return RedirectResponse("/admin/jobs/create?error=type", status_code=302)
     deadline_raw = str(form.get("deadline") or "").strip()
     if deadline_raw:
         try:
@@ -153,12 +156,15 @@ async def jobs_edit_post(request: Request, job_id: str, user=Depends(require_rol
 
     form = await request.form()
     data = {
+        "type": str(form.get("type") or "").strip() or "project_internship",
         "title": str(form.get("title") or "").strip(),
         "company_or_team": str(form.get("company_or_team") or "").strip(),
         "location": str(form.get("location") or "").strip(),
         "job_type": str(form.get("job_type") or "").strip(),
         "description": str(form.get("description") or "").strip(),
     }
+    if data["type"] not in {"project_internship", "research_internship"}:
+        return RedirectResponse(f"/admin/jobs/{job_id}/edit?error=type", status_code=302)
     deadline_raw = str(form.get("deadline") or "").strip()
     data["deadline"] = None
     if deadline_raw:

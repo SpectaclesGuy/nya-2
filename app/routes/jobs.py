@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 
@@ -10,7 +10,6 @@ from app.core.security import require_role
 from app.core.templates import templates
 from app.services.application_service import ApplicationService
 from app.services.job_service import JobService
-from app.services.upload_service import UploadService
 from app.services.user_service import UserService
 
 router = APIRouter(tags=["jobs"])
@@ -19,8 +18,11 @@ router = APIRouter(tags=["jobs"])
 @router.get("/jobs", response_class=HTMLResponse)
 async def jobs_list(request: Request):
     user = get_session_user(request)
+    selected_type = (request.query_params.get("type") or "").strip()
+    if selected_type not in {"project_internship", "research_internship"}:
+        selected_type = ""
     try:
-        jobs = await JobService.list_published_jobs(limit=200)
+        jobs = await JobService.list_published_jobs(limit=200, type=selected_type or None)
     except RuntimeError:
         jobs = []
     for j in jobs:
@@ -29,7 +31,7 @@ async def jobs_list(request: Request):
     return templates.TemplateResponse(
         request,
         "jobs/list.html",
-        {"user": user, "page_title": "Jobs", "jobs": jobs},
+        {"user": user, "page_title": "Jobs", "jobs": jobs, "selected_type": selected_type},
     )
 
 
@@ -71,6 +73,14 @@ async def job_apply_get(request: Request, job_id: str, user=Depends(require_role
     if not user.get("profile_completed"):
         return RedirectResponse("/candidate/complete-profile", status_code=302)
 
+    # Ensure resume is on file (stored in profile).
+    try:
+        user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
+    except Exception:
+        user_doc = None
+    if not (user_doc or {}).get("resume_url") and not (user_doc or {}).get("resume_public_id"):
+        return RedirectResponse("/candidate/profile?error=resume_required", status_code=302)
+
     job = await JobService.get_published_job(job_id)
     if not job:
         return RedirectResponse(f"/jobs/{job_id}", status_code=302)
@@ -87,7 +97,6 @@ async def job_apply_get(request: Request, job_id: str, user=Depends(require_role
 async def job_apply_post(
     request: Request,
     job_id: str,
-    resume: UploadFile = File(...),
     user=Depends(require_role("candidate")),
 ):
     try:
@@ -151,17 +160,14 @@ async def job_apply_post(
             }
         )
 
-    try:
-        resume_url, resume_public_id = await UploadService.upload_resume_pdf(
-            file=resume, user_id=user_id, job_id=job_id_str
-        )
-    except Exception:
-        return RedirectResponse(f"/jobs/{job_id}/apply?error=resume", status_code=302)
-
     # Pull candidate fields from DB (authoritative).
     user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
     candidate_phone = str((user_doc or {}).get("phone_number") or "")
     alternate_email = str((user_doc or {}).get("alternate_email") or "")
+    resume_url = str((user_doc or {}).get("resume_url") or "")
+    resume_public_id = str((user_doc or {}).get("resume_public_id") or "")
+    if not resume_url and not resume_public_id:
+        return RedirectResponse("/candidate/profile?error=resume_required", status_code=302)
 
     app_id = await ApplicationService.create_application(
         data={
@@ -171,8 +177,8 @@ async def job_apply_post(
             "candidate_email": str(user.get("login_email") or ""),
             "candidate_phone": candidate_phone,
             "alternate_email": alternate_email,
-            "resume_url": resume_url,
-            "resume_public_id": resume_public_id,
+            "resume_url": resume_url or None,
+            "resume_public_id": resume_public_id or None,
             "answers": answers_out,
             "status": "submitted",
         }

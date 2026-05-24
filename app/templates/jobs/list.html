@@ -6,7 +6,17 @@
         <div>
           <div class="mb-4"><span class="stamp font-label-sm text-primary border-primary">PUBLIC</span></div>
           <h1 class="font-headline-lg text-headline-lg mb-2">Jobs</h1>
-          <p class="font-body-md text-body-md text-on-surface-variant">Published opportunities appear here.</p>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Published opportunities appear here.
+            {% if selected_type %}
+              <span class="stamp font-label-sm border-on-surface ml-2">{{ "Project Internship" if selected_type == "project_internship" else "Research Internship" }}</span>
+            {% endif %}
+          </p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">All</a>
+          <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs?type=project_internship">Project</a>
+          <a class="border-2 border-on-surface bg-surface px-4 py-2 font-label-sm uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs?type=research_internship">Research</a>
         </div>
       </div>
 
@@ -22,6 +32,11 @@
           {% for job in jobs %}
             <a class="bg-surface border-2 border-on-surface p-8 hover:-translate-y-1 transition-transform" href="/jobs/{{ job._id }}">
               <div class="font-label-sm opacity-50 mb-1">{{ job.company_or_team }}</div>
+              {% if job.type %}
+                <div class="mb-2">
+                  <span class="stamp font-label-sm border-on-surface">{{ "Project Internship" if job.type == "project_internship" else "Research Internship" }}</span>
+                </div>
+              {% endif %}
               <div class="font-headline-md text-headline-md mb-2">{{ job.title }}</div>
               <div class="font-body-md text-body-md text-on-surface-variant">{{ job.location }} · {{ job.job_type }}</div>
             </a>

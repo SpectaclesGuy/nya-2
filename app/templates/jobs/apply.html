@@ -13,12 +13,13 @@
         </div>
       {% endif %}
 
-      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-8" method="post" action="/jobs/{{ job._id }}/apply" enctype="multipart/form-data">
+      <form class="mt-10 bg-surface border-2 border-on-surface p-8 space-y-8" method="post" action="/jobs/{{ job._id }}/apply">
         <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
-
-        <div>
-          <label class="block font-label-md text-label-md mb-2" for="resume">Resume (PDF, max 5MB)</label>
-          <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="resume" name="resume" type="file" accept="application/pdf,.pdf" required />
+        <div class="border border-outline-variant bg-surface-container-lowest p-6">
+          <div class="font-label-sm opacity-50 uppercase mb-2">Resume</div>
+          <div class="font-body-md text-body-md text-on-surface-variant">
+            Your resume is pulled from your profile. Update it from <a class="underline hover:text-primary" href="/candidate/profile">Profile</a>.
+          </div>
         </div>
 
         {% for q in (job.questions or [])|sort(attribute='order') %}

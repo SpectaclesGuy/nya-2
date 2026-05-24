@@ -42,6 +42,14 @@
             <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="job_type" name="job_type" required value="{{ job.job_type if job else '' }}" placeholder="Internship / Full-time" />
           </div>
         </div>
+        <div>
+          <label class="block font-label-md text-label-md mb-2" for="type">Type</label>
+          <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="type" name="type" required>
+            <option value="project_internship" {% if job and job.type == 'project_internship' %}selected{% endif %}>Project Internship</option>
+            <option value="research_internship" {% if job and job.type == 'research_internship' %}selected{% endif %}>Research Internship</option>
+          </select>
+          <div class="font-label-sm text-label-sm opacity-60 mt-2">Used on the landing page tracks section.</div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block font-label-md text-label-md mb-2" for="location">Location</label>

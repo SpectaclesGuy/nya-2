@@ -17,6 +17,10 @@ _SAFE_ID_RE = re.compile(r"[^a-zA-Z0-9_-]+")
 
 class UploadService:
     @staticmethod
+    async def upload_profile_resume_pdf(*, file: UploadFile, user_id: str) -> Tuple[str, str]:
+        return await UploadService.upload_resume_pdf(file=file, user_id=user_id, job_id="profile")
+
+    @staticmethod
     async def upload_resume_pdf(*, file: UploadFile, user_id: str, job_id: str) -> Tuple[str, str]:
         if not file:
             raise RuntimeError("Missing file")

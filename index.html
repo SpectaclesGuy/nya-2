@@ -132,7 +132,9 @@
 <div class="font-headline-md font-bold tracking-tighter text-on-surface dark:text-on-surface-variant text-[22px] leading-tight sm:text-headline-md sm:text-headline-md">NOT / AVERAGE</div>
 <div class="hidden md:flex gap-8 items-center">
 <a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#manifesto">Manifesto</a>
-<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Active Forges</a>
+<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#tracks">Tracks</a>
+<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#active-forges">Projects</a>
+<a class="text-on-surface-variant dark:text-outline font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#process">Process</a>
 </div>
 <details class="md:hidden relative">
   <summary class="list-none cursor-pointer border-2 border-on-surface bg-surface px-3 py-2 font-label-sm text-label-sm font-bold inline-flex items-center gap-2 whitespace-nowrap">
@@ -141,7 +143,9 @@
   </summary>
   <div class="absolute right-0 mt-2 w-56 bg-surface border-2 border-on-surface p-3 flex flex-col gap-2 z-50">
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#manifesto">Manifesto</a>
-    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#active-forges">Active Forges</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#tracks">Tracks</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#active-forges">Projects</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#process">Process</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
   </div>
 </details>
@@ -152,8 +156,8 @@
 </div>
 </nav>
 <main class="pt-24">
-<!-- Section 1: Hero -->
-<section class="grid grid-cols-12 gap-0 border-b-2 border-on-surface min-h-[680px] md:min-h-[819px]">
+<!-- Section 1: Manifesto (Top) -->
+<section class="grid grid-cols-12 gap-0 border-b-2 border-on-surface min-h-[680px] md:min-h-[819px]" id="manifesto">
 <div class="col-span-12 lg:col-span-8 p-6 sm:p-8 md:p-margin-desktop flex flex-col justify-center border-b-2 lg:border-b-0 lg:border-r-2 border-on-surface">
 <div class="mb-6">
 <span class="stamp font-label-sm text-primary border-primary">JUNE COHORT / FORGE OPEN</span>
@@ -211,92 +215,139 @@
 </div>
 </div>
 </section>
-<!-- Section 2: Comparison -->
-<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-b-2 border-on-surface bg-surface-container-lowest">
-<div class="mb-16">
-<span class="font-label-sm text-label-sm bg-on-surface text-surface px-2 py-1 uppercase">Metric Comparison</span>
-<h2 class="font-headline-lg text-headline-lg mt-4">Average Waits. NYA Forges.</h2>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-24 relative">
-<!-- Average Path -->
-<div class="opacity-40">
-<div class="font-label-md text-label-md mb-8 uppercase tracking-widest">Average Path</div>
-<div class="space-y-12">
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">01</div>
-<div class="font-headline-md text-headline-md italic">Courses</div>
-</div>
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">02</div>
-<div class="font-headline-md text-headline-md italic">Certificates</div>
-</div>
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-on-surface flex items-center justify-center font-label-md">03</div>
-<div class="font-headline-md text-headline-md italic">Resume Lines</div>
-</div>
-<div class="flex items-center gap-6">
-<span class="material-symbols-outlined text-4xl">hourglass_empty</span>
-<div class="font-headline-md text-headline-md italic">Waiting...</div>
-</div>
-</div>
-</div>
-<!-- NYA Forge -->
-<div class="relative">
-<div class="font-label-md text-label-md mb-8 uppercase tracking-widest text-primary">NYA Forge Flow</div>
-<div class="space-y-12 relative z-10">
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">01</div>
-<div class="font-headline-md text-headline-md uppercase font-black">Pods</div>
-</div>
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">02</div>
-<div class="font-headline-md text-headline-md uppercase font-black">Pressure</div>
-</div>
-<div class="flex items-center gap-6">
-<div class="w-12 h-12 border-2 border-primary bg-primary text-white flex items-center justify-center font-label-md">03</div>
-<div class="font-headline-md text-headline-md uppercase font-black">Proof</div>
-</div>
-<div class="flex items-center gap-6">
-<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
-<div class="font-headline-md text-headline-md uppercase font-black text-primary">Public Output</div>
-</div>
-</div>
-<!-- Pressure Line Motif -->
-<div class="absolute -left-12 top-20 bottom-0 w-1 pressure-line"></div>
-</div>
-</div>
+<!-- Section 2: Tracks -->
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-b-2 border-on-surface bg-surface-container-lowest" id="tracks">
+  <div class="mb-12">
+    <span class="font-label-sm text-label-sm bg-on-surface text-surface px-2 py-1 uppercase">Choose your track</span>
+    <h2 class="font-headline-lg text-headline-lg mt-4">Choose your Summer Forge track</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-3xl">
+      Select the vector that matches your intent. You can refine your role inside the application form.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-surface border-2 border-on-surface p-10 relative">
+      <div class="flex items-start justify-between gap-6">
+        <div>
+          <span class="stamp font-label-sm border-on-surface">TRACK 01</span>
+          <h3 class="font-headline-md text-headline-md mt-6">Project Internship</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-xl">
+            Build real systems, tools, dashboards, apps, automations, and product workflows.
+          </p>
+        </div>
+        <span class="material-symbols-outlined text-4xl opacity-30">construction</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mt-8 border-t border-outline-variant pt-6">
+        <div class="font-label-sm opacity-70">• Full stack builds</div>
+        <div class="font-label-sm opacity-70">• Backend systems</div>
+        <div class="font-label-sm opacity-70">• UI/UX design</div>
+        <div class="font-label-sm opacity-70">• Automation</div>
+      </div>
+
+      <a class="w-full mt-10 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors block text-center" href="/jobs?type=project_internship">
+        Explore Project Track →
+      </a>
+    </div>
+
+    <div class="bg-on-surface text-surface border-2 border-on-surface p-10 relative overflow-hidden">
+      <div class="absolute top-0 right-0 p-6 opacity-10">
+        <span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">science</span>
+      </div>
+      <div class="flex items-start justify-between gap-6 relative z-10">
+        <div>
+          <span class="stamp font-label-sm border-surface text-surface">TRACK 02</span>
+          <h3 class="font-headline-md text-headline-md mt-6">Research Internship</h3>
+          <p class="font-body-md text-body-md opacity-90 mt-3 max-w-xl">
+            Work on literature reviews, experiments, visualizations, and papers with visible proof of work.
+          </p>
+        </div>
+        <span class="material-symbols-outlined text-4xl opacity-70">biotech</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mt-8 border-t border-surface/30 pt-6 relative z-10">
+        <div class="font-label-sm opacity-90">• Lit reviews</div>
+        <div class="font-label-sm opacity-90">• Data analysis</div>
+        <div class="font-label-sm opacity-90">• Visualization</div>
+        <div class="font-label-sm opacity-90">• Paper pipelines</div>
+      </div>
+
+      <a class="w-full mt-10 py-3 border border-surface font-label-sm uppercase font-bold hover:bg-surface hover:text-on-surface transition-colors block text-center relative z-10" href="/jobs?type=research_internship">
+        Explore Research Track →
+      </a>
+    </div>
+  </div>
 </section>
-<!-- Section 3: The Forge Process -->
-<section class="border-b-2 border-on-surface overflow-hidden">
-<div class="grid grid-cols-1 md:grid-cols-4">
-<div class="p-10 border-r-2 border-on-surface hover:bg-surface-container-high transition-colors">
-<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 01</div>
-<h3 class="font-headline-md text-headline-md mb-4">Raw Input</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Untapped intent and raw technical skill. We filter for obsession over credentials.</p>
-</div>
-<div class="p-10 border-r-2 border-on-surface bg-primary text-white">
-<div class="font-label-sm text-label-sm mb-2 opacity-70">PHASE 02</div>
-<h3 class="font-headline-md text-headline-md mb-4">Pressure</h3>
-<p class="font-body-md text-body-md opacity-90">Tight deadlines, radical accountability, and peer-reviewed shipping cycles.</p>
-</div>
-<div class="p-10 border-r-2 border-on-surface hover:bg-surface-container-high transition-colors">
-<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 03</div>
-<h3 class="font-headline-md text-headline-md mb-4">Formation</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Transforming ideas into robust systems, products, and verifiable research.</p>
-</div>
-<div class="p-10 hover:bg-surface-container-high transition-colors">
-<div class="font-label-sm text-label-sm mb-2 opacity-50">PHASE 04</div>
-<h3 class="font-headline-md text-headline-md mb-4">Proof</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Live demos, published papers, and artifacts that command attention.</p>
-</div>
-</div>
+<!-- Section 3: How selection works -->
+<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-b-2 border-on-surface bg-background overflow-hidden" id="process">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12 sm:mb-16">
+      <span class="stamp font-label-sm text-primary border-primary">PROCESS</span>
+      <h2 class="font-headline-lg text-headline-lg mt-4">How selection works</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-3">A tight loop from application → track assignment → work.</p>
+    </div>
+
+    <div class="bg-surface border-2 border-on-surface p-8 sm:p-10">
+      <div class="relative">
+        <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-outline-variant"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <div class="space-y-10">
+            <div class="relative md:pr-14">
+              <div class="hidden md:block absolute right-[-9px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 01</div>
+              <div class="font-headline-md text-headline-md mb-2">Submit Application</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">Initial dossier submission via the portal.</div>
+            </div>
+
+            <div class="relative md:pr-14">
+              <div class="hidden md:block absolute right-[-9px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 03</div>
+              <div class="font-headline-md text-headline-md mb-2">Track Preference Review</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">Architects review your chosen vector and answers.</div>
+            </div>
+
+            <div class="relative md:pr-14">
+              <div class="hidden md:block absolute right-[-9px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 05</div>
+              <div class="font-headline-md text-headline-md mb-2">Track Assignment</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">Formal onboarding into your project or research pod.</div>
+            </div>
+          </div>
+
+          <div class="space-y-10 md:text-left">
+            <div class="relative md:pl-14">
+              <div class="hidden md:block absolute left-[-7px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 02</div>
+              <div class="font-headline-md text-headline-md mb-2">Upload Resume</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">Verification of experience and proof of work.</div>
+            </div>
+
+            <div class="relative md:pl-14">
+              <div class="hidden md:block absolute left-[-7px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 04</div>
+              <div class="font-headline-md text-headline-md mb-2">Short Interview / Sync</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">A 15-minute alignment call with the team.</div>
+            </div>
+
+            <div class="relative md:pl-14">
+              <div class="hidden md:block absolute left-[-7px] top-2 w-4 h-4 rounded-full bg-primary"></div>
+              <div class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-2">Phase 06</div>
+              <div class="font-headline-md text-headline-md mb-2">Summer Work Begins</div>
+              <div class="font-body-md text-body-md text-on-surface-variant">Active development and research sprints kick off.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- Section 4: Active Forges -->
+<!-- Section 4: Projects -->
 <section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop bg-surface-dim" id="active-forges">
 <div class="flex justify-between items-end mb-16">
 <div>
-<h2 class="font-headline-lg text-headline-lg uppercase">Active Forges</h2>
-<p class="font-label-md text-label-md text-on-surface-variant mt-2 uppercase">Current production environments</p>
+<h2 class="font-headline-lg text-headline-lg uppercase">What you may work on</h2>
+<p class="font-label-md text-label-md text-on-surface-variant mt-2 uppercase">Published opportunities</p>
 </div>
 <div class="hidden md:block">
 <span class="stamp font-label-sm border-on-surface" id="active-forges-updated">UPDATED: 2024-06-12</span>
@@ -373,37 +424,7 @@
 </div>
 </div>
 </section>
-<!-- Section 5: The Forge Gate -->
-<section class="py-20 sm:py-24 px-5 sm:px-8 md:px-margin-desktop border-y-2 border-on-surface bg-background">
-<h2 class="font-display-lg text-display-lg uppercase text-center mb-24">The Forge Gate</h2>
-<div class="max-w-4xl mx-auto space-y-0 border-l-2 border-on-surface">
-<div class="relative pl-12 pb-16">
-<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
-<h3 class="font-headline-md text-headline-md uppercase mb-2">Submit Profile</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Prove you have skin in the game. Send us your Github, papers, or proof-of-work.</p>
-</div>
-<div class="relative pl-12 pb-16">
-<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
-<h3 class="font-headline-md text-headline-md uppercase mb-2">Intent Review</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Direct interrogation of your ambition. We filter out certificate seekers.</p>
-</div>
-<div class="relative pl-12 pb-16">
-<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
-<h3 class="font-headline-md text-headline-md uppercase mb-2">Skill Sync</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Peer-matching for technical and philosophical alignment within pods.</p>
-</div>
-<div class="relative pl-12 pb-16">
-<div class="absolute left-[-9px] top-0 w-4 h-4 bg-on-surface rounded-full"></div>
-<h3 class="font-headline-md text-headline-md uppercase mb-2">Pod Allocation</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Placement into a specific forge based on current heat and seat availability.</p>
-</div>
-<div class="relative pl-12">
-<div class="absolute left-[-9px] top-0 w-4 h-4 bg-primary rounded-full animate-pulse"></div>
-<h3 class="font-headline-md text-headline-md uppercase text-primary mb-2">Forge Sprint Begins</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">Total immersion. 8 weeks of high-pressure output.</p>
-</div>
-</div>
-</section>
+<!-- (Removed) The Forge Gate -->
 <!-- Section 6: Manifesto -->
 <section class="py-24 sm:py-32 px-5 sm:px-8 md:px-margin-desktop bg-on-surface text-surface flex items-center justify-center text-center overflow-hidden relative" id="manifesto">
 <!-- Background Decorative Texture -->
@@ -652,7 +673,8 @@
 
                                     const id = document.createElement('div');
                                     id.className = 'font-label-sm opacity-50 mb-1';
-                                    id.textContent = 'TYPE: JOB';
+                                    const trackLabel = (String(j.type || '') === 'research_internship') ? 'RESEARCH INTERNSHIP' : 'PROJECT INTERNSHIP';
+                                    id.textContent = `TRACK: ${trackLabel}`;
                                     card.appendChild(id);
 
                                     const title = document.createElement('h4');
@@ -675,9 +697,9 @@
                                         return r;
                                     };
 
-                                    body.appendChild(row('COMPANY:', String(j.company_or_team || 'â€”')));
-                                    body.appendChild(row('LOCATION:', String(j.location || 'â€”')));
-                                    body.appendChild(row('TYPE:', String(j.job_type || 'â€”').toUpperCase()));
+                                    body.appendChild(row('COMPANY:', String(j.company_or_team || '')));
+                                    body.appendChild(row('LOCATION:', String(j.location || '')));
+                                    body.appendChild(row('TYPE:', String(j.job_type || '').toUpperCase()));
                                     card.appendChild(body);
 
                                     const btn = document.createElement('div');
@@ -708,10 +730,10 @@
                     k.textContent = 'STATUS';
                     const h = document.createElement('div');
                     h.className = 'font-headline-md text-headline-md uppercase mb-2';
-                    h.textContent = 'No Active Forge yet';
+                    h.textContent = 'No openings yet';
                     const p = document.createElement('p');
                     p.className = 'font-body-md text-body-md text-on-surface-variant';
-                    p.textContent = 'When new forges are published, they’ll appear here.';
+                    p.textContent = 'When jobs are published, they’ll appear here.';
                     empty.appendChild(k);
                     empty.appendChild(h);
                     empty.appendChild(p);
