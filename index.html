@@ -144,7 +144,7 @@
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#manifesto">Manifesto</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#tracks">Tracks</a>
     <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="#process">Process</a>
-    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Applications</a>
+    <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/#tracks">Applications</a>
   </div>
 </details>
   <div class="flex items-center gap-2 sm:gap-3 shrink-0" id="topnav-auth-slot">
@@ -195,8 +195,8 @@
 <div>
 <div class="font-label-sm opacity-70 uppercase tracking-widest">Live signal</div>
 <div class="font-body-md text-body-md text-on-surface-variant mt-2">
-<span class="font-label-md font-bold" id="forge-status-pods">—</span> live applications •
-<span class="font-label-md font-bold" id="forge-status-seats">—</span> total submissions (no matter how many, every applicant is special for us)
+<span class="font-label-md font-bold" id="forge-status-pods">2 LIVE</span> live applications •
+<span class="font-label-md font-bold" id="forge-status-seats">15 TOTAL</span> total submissions (<span class="font-label-md font-bold">no matter how many, every applicant is special for us</span>)
 </div>
 </div>
 <span class="material-symbols-outlined text-on-surface opacity-60">bolt</span>
@@ -223,21 +223,24 @@
     </p>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <div class="bg-surface border-2 border-on-surface p-10 relative" id="project-internship">
-      <div class="flex items-start justify-between gap-6">
-        <div>
-          <span class="stamp font-label-sm border-on-surface">TRACK 01</span>
-          <h3 class="font-headline-md text-headline-md mt-6">Project Internship</h3>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"> 
+    <div class="bg-surface border-2 border-on-surface p-10 relative flex flex-col h-full" id="project-internship"> 
+      <div class="flex items-start justify-between gap-6"> 
+        <div> 
+          <span class="stamp font-label-sm border-on-surface">TRACK 01</span> 
+          <h3 class="font-headline-md text-headline-md mt-6">Project Internship</h3> 
           <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-xl">
             Build real systems, tools, dashboards, apps, automations, and product workflows.
           </p>
-          <p class="font-label-sm opacity-70 mt-3">
-            In collaboration with our industrial partner.
-          </p>
-        </div>
-        <span class="material-symbols-outlined text-4xl opacity-30">construction</span>
-      </div>
+          <p class="font-label-sm opacity-70 mt-3"> 
+            In collaboration with our industrial partner. 
+          </p> 
+          <div class="mt-3">
+            <span class="stamp font-label-sm text-primary border-primary">Deadline: 27th June, EOD</span>
+          </div>
+        </div> 
+        <span class="material-symbols-outlined text-4xl opacity-30">construction</span> 
+      </div> 
 
       <div class="grid grid-cols-2 gap-4 mt-8 border-t border-outline-variant pt-6">
         <div class="font-label-sm opacity-70">• Full stack builds</div>
@@ -246,25 +249,28 @@
         <div class="font-label-sm opacity-70">• Automation</div>
       </div>
 
-      <a class="w-full mt-10 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors block text-center" href="/tracks/project-internship">
+      <a class="w-full mt-auto pt-10 py-3 border border-on-surface font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors block text-center" href="/tracks/project-internship">
         Explore Project Track →
       </a>
     </div>
 
-    <div class="bg-on-surface text-surface border-2 border-on-surface p-10 relative overflow-hidden" id="research-internship">
+    <div class="bg-on-surface text-surface border-2 border-on-surface p-10 relative overflow-hidden flex flex-col h-full" id="research-internship"> 
       <div class="absolute top-0 right-0 p-6 opacity-10">
         <span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">science</span>
       </div>
       <div class="flex items-start justify-between gap-6 relative z-10">
-        <div>
-          <span class="stamp font-label-sm border-surface text-surface">TRACK 02</span>
-          <h3 class="font-headline-md text-headline-md mt-6">Research Internship</h3>
-          <p class="font-body-md text-body-md opacity-90 mt-3 max-w-xl">
-            Work on literature reviews, experiments, visualizations, and papers with visible proof of work.
-          </p>
-        </div>
-        <span class="material-symbols-outlined text-4xl opacity-70">biotech</span>
-      </div>
+        <div> 
+          <span class="stamp font-label-sm border-surface text-surface">TRACK 02</span> 
+          <h3 class="font-headline-md text-headline-md mt-6">Research Internship</h3> 
+          <p class="font-body-md text-body-md opacity-90 mt-3 max-w-xl"> 
+            Work on literature reviews, experiments, visualizations, and papers with visible proof of work. 
+          </p> 
+          <div class="mt-3">
+            <span class="stamp font-label-sm border-surface text-surface">Deadline: 27th June, EOD</span>
+          </div>
+        </div> 
+        <span class="material-symbols-outlined text-4xl opacity-70">biotech</span> 
+      </div> 
 
       <div class="grid grid-cols-2 gap-4 mt-8 border-t border-surface/30 pt-6 relative z-10">
         <div class="font-label-sm opacity-90">• Lit reviews</div>
@@ -273,7 +279,7 @@
         <div class="font-label-sm opacity-90">• Paper pipelines</div>
       </div>
 
-      <a class="w-full mt-10 py-3 border border-surface font-label-sm uppercase font-bold hover:bg-surface hover:text-on-surface transition-colors block text-center relative z-10" href="/tracks/research-internship">
+      <a class="w-full mt-auto pt-10 py-3 border border-surface font-label-sm uppercase font-bold hover:bg-surface hover:text-on-surface transition-colors block text-center relative z-10" href="/tracks/research-internship">
         Explore Research Track →
       </a>
     </div>
@@ -493,8 +499,8 @@
         const applyForgeStatus = (data) => {
             if (!data || !data.available) {
                 if (forgeStatusEls.state) forgeStatusEls.state.textContent = 'Status: —';
-                if (forgeStatusEls.pods) forgeStatusEls.pods.textContent = '—';
-                if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = '—';
+                if (forgeStatusEls.pods) forgeStatusEls.pods.textContent = '2 LIVE';
+                if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = '15 TOTAL';
                 return false;
             }
             const heatPercent = Number(data.heat_percent);
@@ -502,17 +508,17 @@
 
             const statusText = String(data.status || 'Active');
             const heatLabel = String(data.heat_label || '').toUpperCase();
-            const podsActive = Number(data.pod_tracks_active);
+            const podsActive = 2;
             const seatsLeft = Number(data.seats_left);
 
             if (forgeStatusEls.state) forgeStatusEls.state.textContent = `Status: ${statusText}`;
             // Re-mapped portal metrics:
             // - pod_tracks_active -> published jobs
             // - seats_left        -> total applications
-            if (forgeStatusEls.pods && Number.isFinite(podsActive)) forgeStatusEls.pods.textContent = `${podsActive} LIVE`;
-            if (forgeStatusEls.seats && Number.isFinite(seatsLeft)) forgeStatusEls.seats.textContent = `${seatsLeft} TOTAL`;
-            return true;
-        };
+            if (forgeStatusEls.pods) forgeStatusEls.pods.textContent = `${podsActive} LIVE`;
+            if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = `${Number.isFinite(seatsLeft) ? seatsLeft : 15} TOTAL`;
+            return true; 
+        }; 
 
         let forgeStatusPollTimer = null;
         const fetchForgeStatus = async () => {

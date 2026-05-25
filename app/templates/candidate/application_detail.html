@@ -31,18 +31,25 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             <div class="md:col-span-2">
               <div class="font-label-sm opacity-50 uppercase mb-2">Posting</div>
-              <div class="font-headline-md text-headline-md">{{ job.title if job else application.job_id }}</div>
+              {% set posting_type = "" %}
+              {% if job and job.type %}
+                {% set posting_type = job.type %}
+              {% elif application.track_section %}
+                {% set posting_type = application.track_section %}
+              {% endif %}
+
+              {% set posting_label = "Application" %}
+              {% if posting_type == "project_internship" %}
+                {% set posting_label = "Project Internship" %}
+              {% elif posting_type == "research_internship" %}
+                {% set posting_label = "Research Internship" %}
+              {% endif %}
+
+              <div class="font-headline-md text-headline-md">{{ posting_label }}</div>
               {% if job %}
                 <div class="font-body-md text-body-md text-on-surface-variant mt-2">
-                  {{ job.company_or_team }}· {{ job.location }} · {{ job.job_type }}
+                  <span class="opacity-70">{{ job.company_or_team }}· {{ job.location }} · {{ job.job_type }}</span>
                 </div>
-                {% if job.type %}
-                  <div class="mt-3">
-                    <span class="stamp font-label-sm border-on-surface">
-                      {{ "Project Internship" if job.type == "project_internship" else "Research Internship" }}
-                    </span>
-                  </div>
-                {% endif %}
               {% endif %}
             </div>
             <div class="border border-outline-variant p-6 bg-surface-container-lowest">

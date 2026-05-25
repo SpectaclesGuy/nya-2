@@ -36,8 +36,8 @@ class CandidateProfileUpdate(BaseModel):
     portfolio_url: str | None = Field(default=None, max_length=500)
     other_links: list[str] = Field(min_length=1, max_length=20)
 
-    available_from: str = Field(min_length=1, max_length=32)
-    hours_per_week: int = Field(ge=1, le=80)
+    available_from: str | None = Field(default=None, max_length=32)
+    hours_per_week: int | None = Field(default=None, ge=1, le=80)
 
     @field_validator("phone_number")
     @classmethod
@@ -52,6 +52,21 @@ class CandidateProfileUpdate(BaseModel):
         s = str(v).strip()
         return s or None
 
+    @field_validator("available_from", mode="before")
+    @classmethod
+    def _available_from_empty_to_none(cls, v):
+        if v is None:
+            return None
+        s = str(v).strip()
+        return s or None
+
+    @field_validator("hours_per_week", mode="before")
+    @classmethod
+    def _hours_empty_to_none(cls, v):
+        if v is None or v == "":
+            return None
+        return v
+
     @field_validator(
         "current_city",
         "current_country",
@@ -65,7 +80,6 @@ class CandidateProfileUpdate(BaseModel):
         "major",
         "gpa",
         "experience_summary",
-        "available_from",
         mode="before",
     )
     @classmethod

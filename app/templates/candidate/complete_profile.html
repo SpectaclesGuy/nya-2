@@ -72,12 +72,12 @@
                   minlength="10"
                   maxlength="15"
                   required
-                  placeholder="10â€“15 digits"
+                  placeholder="10-15 digits"
                   onkeydown="if(['e','E','+','-','.',','].includes(event.key)) event.preventDefault();"
                   oninput="this.value=this.value.replace(/\\D/g,'').slice(0,15)"
                   value="{{ user.phone_number or '' }}"
                 />
-                <div class="font-label-sm text-label-sm opacity-60 mt-2">Digits only (10â€“15).</div>
+                <div class="font-label-sm text-label-sm opacity-60 mt-2"></div>
               </div>
 
               <div>
@@ -139,7 +139,7 @@
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="sm:col-span-2">
                 <label class="block font-label-md text-label-md mb-2" for="university">University / Institution *</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or '' }}" />
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or 'Thapar Institute of Engineering & Technology' }}" />
               </div>
               <div>
                 <label class="block font-label-md text-label-md mb-2" for="degree">Degree *</label>
@@ -230,26 +230,10 @@
             </div>
           </div>
 
-          <div class="bg-surface border-2 border-on-surface overflow-hidden">
-            <div class="px-5 py-3 bg-surface-container-low border-b-2 border-on-surface font-label-sm uppercase tracking-widest">
-              07 / Availability
-            </div>
-            <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="available_from">Available from *</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="available_from" name="available_from" placeholder="DD-MM-YYYY" required value="{{ user.available_from or '' }}" />
-              </div>
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week *</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="hours_per_week" name="hours_per_week" type="number" min="1" max="80" placeholder="e.g., 20" required value="{{ user.hours_per_week or '' }}" />
-              </div>
-            </div>
-          </div>
-
-          <div class="flex gap-4 flex-wrap">
-            <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
-              Save & continue
-            </button>
+          <div class="flex gap-4 flex-wrap"> 
+            <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit"> 
+              Save & continue 
+            </button> 
             <a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">Browse applications</a>
           </div>
         </div>
@@ -261,8 +245,8 @@
                 <div class="font-label-sm opacity-50 uppercase tracking-widest">Applicant dossier</div>
                 <div class="font-headline-md text-headline-md mt-1">Profile setup</div>
               </div>
-              <span class="stamp font-label-sm border-on-surface">07 sections</span>
-            </div>
+              <span class="stamp font-label-sm border-on-surface">06 sections</span> 
+            </div> 
 
             <div class="mt-6 border-t border-outline-variant pt-6 space-y-3">
               <div class="flex items-center justify-between font-body-md text-body-md">

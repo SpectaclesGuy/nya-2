@@ -151,8 +151,6 @@ async def profile_post(request: Request, user=Depends(require_role("candidate"))
             github_url=form.get("github_url"),
             portfolio_url=form.get("portfolio_url"),
             other_links=other_links_raw,
-            available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
-            hours_per_week=form.get("hours_per_week"),
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/profile?error=validation", status_code=302)
@@ -379,8 +377,6 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
             github_url=form.get("github_url"),
             portfolio_url=form.get("portfolio_url"),
             other_links=other_links_raw,
-            available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
-            hours_per_week=form.get("hours_per_week"),
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/complete-profile?error=validation", status_code=302)
