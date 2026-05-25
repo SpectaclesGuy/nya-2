@@ -42,6 +42,9 @@ def _google_auth_url(state: str, nonce: str) -> str:
 @router.get("/google/login")
 @limiter.limit("10/minute")
 async def google_login(request: Request):
+    next_url = str(request.query_params.get("next") or "").strip()
+    if next_url.startswith("/") and not next_url.startswith("//"):
+        request.session["post_login_next"] = next_url
     state = secrets.token_urlsafe(32)
     nonce = secrets.token_urlsafe(32)
     code_verifier = secrets.token_urlsafe(64)
@@ -138,8 +141,14 @@ async def google_callback(request: Request):
     if role is None:
         return RedirectResponse("/?error=unauthorized", status_code=302)
 
+    next_url = str(request.session.get("post_login_next") or "").strip()
+    if not (next_url.startswith("/") and not next_url.startswith("//")):
+        next_url = ""
+
     # Regenerate session after login.
     request.session.clear()
+    if next_url:
+        request.session["post_login_next"] = next_url
     request.session["user"] = {
         "id": str(user_doc.get("_id")) if isinstance(user_doc, dict) and user_doc.get("_id") else None,
         "google_sub": idinfo.get("sub"),
@@ -154,6 +163,9 @@ async def google_callback(request: Request):
         return RedirectResponse("/admin/dashboard", status_code=302)
     if not request.session["user"].get("profile_completed"):
         return RedirectResponse("/candidate/complete-profile", status_code=302)
+    if next_url and next_url.startswith("/") and not next_url.startswith("//"):
+        request.session.pop("post_login_next", None)
+        return RedirectResponse(next_url, status_code=302)
     return RedirectResponse("/candidate/dashboard", status_code=302)
 
 

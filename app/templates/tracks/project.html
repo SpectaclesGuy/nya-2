@@ -7,15 +7,18 @@
           <div>
             <div class="inline-flex items-center gap-3">
               <span class="stamp font-label-sm border-on-surface">OPEN CALL // PROJECT TRACK</span>
-              <span class="stamp font-label-sm text-primary border-primary">TRACK_02</span>
+              <span class="stamp font-label-sm text-primary border-primary">TRACK_01</span>
             </div>
             <h1 class="font-display-lg text-display-lg mt-6">Build real systems this summer.</h1>
             <p class="font-body-lg text-body-lg text-on-surface-variant mt-6 max-w-xl">
               Join guided project teams working on tools, platforms, dashboards, apps, automations, and production workflows.
               Stop simulating. Start deploying.
             </p>
+            <div class="mt-4 font-label-sm opacity-70">
+              In collaboration with our industrial partner.
+            </div>
             <div class="mt-8 flex gap-4 flex-wrap">
-              <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="/tracks/project-internship/apply">
+              <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="{{ '/tracks/project-internship/apply' if user else '/auth/google/login?next=/tracks/project-internship/apply' }}">
                 Apply for project track
                 <span class="material-symbols-outlined">arrow_forward</span>
               </a>
@@ -54,7 +57,7 @@
       <div class="mt-16 bg-surface-container-low border-2 border-on-surface p-10 sm:p-14 text-center">
         <div class="font-headline-lg text-headline-lg">Ready to build?</div>
         <div class="mt-8">
-          <a class="bg-tertiary text-white border-2 border-on-surface px-10 py-5 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="/tracks/project-internship/apply">
+          <a class="bg-tertiary text-white border-2 border-on-surface px-10 py-5 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="{{ '/tracks/project-internship/apply' if user else '/auth/google/login?next=/tracks/project-internship/apply' }}">
             Apply for project internship
             <span class="material-symbols-outlined">arrow_forward</span>
           </a>

@@ -22,6 +22,26 @@
           <div class="font-body-md text-body-md text-on-surface-variant">Your profile has been updated.</div>
         </div>
       {% endif %}
+
+      {% if user.profile_completed %}
+        <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a class="bg-surface border-2 border-on-surface p-6 hover:-translate-y-1 transition-transform" href="/#project-internship">
+            <div class="font-label-sm opacity-50 uppercase mb-1">NEXT</div>
+            <div class="font-headline-md text-headline-md">Apply for Project</div>
+            <div class="font-body-md text-body-md text-on-surface-variant mt-2">Jump to the project internship apply link.</div>
+          </a>
+          <a class="bg-surface border-2 border-on-surface p-6 hover:-translate-y-1 transition-transform" href="/#research-internship">
+            <div class="font-label-sm opacity-50 uppercase mb-1">NEXT</div>
+            <div class="font-headline-md text-headline-md">Apply for Research</div>
+            <div class="font-body-md text-body-md text-on-surface-variant mt-2">Jump to the research internship apply link.</div>
+          </a>
+          <a class="bg-surface border-2 border-on-surface p-6 hover:-translate-y-1 transition-transform" href="/">
+            <div class="font-label-sm opacity-50 uppercase mb-1">HOME</div>
+            <div class="font-headline-md text-headline-md">Back to home</div>
+            <div class="font-body-md text-body-md text-on-surface-variant mt-2">Return to the portal landing page.</div>
+          </a>
+        </div>
+      {% endif %}
       {% if request.query_params.get("error") %}
         <div class="mb-8 border-2 border-on-surface bg-error-container p-4">
           <div class="font-label-md font-bold">Couldnâ€™t update profile.</div>
@@ -35,7 +55,7 @@
             {% elif request.query_params.get("error") == "resume" %}
               Resume upload failed. Please upload a PDF (max 5MB) and try again.
             {% elif request.query_params.get("error") == "resume_required" %}
-              Please upload your resume in section <span class="font-label-md">06</span> to apply for jobs.
+              Please upload your resume in section <span class="font-label-md">06</span> to apply.
             {% else %}
               Please try again.
             {% endif %}
@@ -148,7 +168,7 @@
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="sm:col-span-2">
                 <label class="block font-label-md text-label-md mb-2" for="university">University / Institution</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or '' }}" />
+                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or 'Thapar Institute of Engineering & Technology' }}" />
               </div>
               <div>
                 <label class="block font-label-md text-label-md mb-2" for="degree">Degree</label>
@@ -231,7 +251,7 @@
               <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="resume" name="resume" type="file" accept="application/pdf,.pdf" />
               {% if user.resume_url %}
                 <div class="font-label-sm text-label-sm opacity-70">
-                  Resume on file{% if user.resume_updated_at %} â€” last updated {{ user.resume_updated_at }}{% endif %}.
+                  Resume on file{% if user.resume_updated_at %} last updated {{ user.resume_updated_at }}{% endif %}.
                 </div>
               {% else %}
                 <div class="font-label-sm text-label-sm opacity-70">No resume on file yet.</div>
@@ -252,20 +272,6 @@
                 <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="hours_per_week" name="hours_per_week" type="number" min="1" max="80" placeholder="e.g., 20" required value="{{ user.hours_per_week or '' }}" />
               </div>
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="work_mode">Work mode</label>
-                {% set wm = user.work_mode or "" %}
-                <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="work_mode" name="work_mode" required>
-                  <option value="" disabled {% if wm == "" %}selected{% endif %}>Select</option>
-                  <option value="remote" {% if wm == "remote" %}selected{% endif %}>Remote</option>
-                  <option value="hybrid" {% if wm == "hybrid" %}selected{% endif %}>Hybrid</option>
-                  <option value="onsite" {% if wm == "onsite" %}selected{% endif %}>On-site</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="notice_period_weeks">Notice period (weeks)</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="notice_period_weeks" name="notice_period_weeks" type="number" min="0" max="104" placeholder="e.g., 0" value="{{ user.notice_period_weeks or '' }}" />
-              </div>
             </div>
           </div>
 
@@ -273,7 +279,6 @@
             <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
               Update profile
             </button>
-            <a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">Browse jobs</a>
           </div>
         </div>
 
@@ -291,7 +296,7 @@
 
             <div class="mt-6 border-t border-outline-variant pt-6 space-y-3">
               <div class="font-label-sm opacity-70">
-                Resume is stored in your profile and will be attached to job applications automatically.
+                Resume is stored in your profile and will be attached to applications automatically.
               </div>
               {% if not user.resume_url %}
                 <div class="border border-outline-variant bg-surface-container-lowest p-4">

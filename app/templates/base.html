@@ -144,8 +144,8 @@
       <a class="font-headline-md font-bold tracking-tighter text-[22px] leading-tight sm:text-headline-md sm:text-headline-md" href="/">NOT / AVERAGE</a>
       <div class="hidden md:flex gap-8 items-center">
         {% if user and user.role == "admin" %}
-        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
-          >Public Jobs</a
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/#tracks"
+          >Applications</a
         >
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/dashboard"
           >Admin</a
@@ -154,14 +154,14 @@
           >Users</a
         >
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/jobs"
-          >Manage Jobs</a
+          >Manage Applications</a
         >
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/admin/submissions"
           >Submissions</a
         >
         {% elif user %}
-        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
-          >Jobs</a
+        <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/#tracks"
+          >Applications</a
         >
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/candidate/dashboard"
           >Dashboard</a
@@ -171,7 +171,7 @@
         >
         {% else %}
         <a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="/jobs"
-          >Jobs</a
+          >Applications</a
         >
         {% endif %}
       </div>
@@ -184,16 +184,16 @@
         <div class="absolute right-0 mt-2 w-56 bg-surface border-2 border-on-surface p-3 flex flex-col gap-2 z-50">
           {% if user and user.role == "admin" %}
             <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/dashboard">Admin Dashboard</a>
-            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/jobs">Manage Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/jobs">Manage Applications</a>
             <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/submissions">Submissions</a>
             <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/admin/users">Users</a>
-            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Public Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/#tracks">Applications</a>
           {% elif user %}
             <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/candidate/dashboard">Dashboard</a>
-            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/#tracks">Applications</a>
             <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/candidate/profile">Update Profile</a>
           {% else %}
-            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/jobs">Jobs</a>
+            <a class="px-3 py-2 border border-outline-variant hover:bg-surface-container-high" href="/#tracks">Applications</a>
           {% endif %}
         </div>
       </details>

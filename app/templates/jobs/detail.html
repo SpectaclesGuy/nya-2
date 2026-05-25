@@ -2,9 +2,9 @@
 {% block content %}
   <section class="py-20">
     <div class="max-w-3xl mx-auto">
-      <div class="mb-6"><span class="stamp font-label-sm border-on-surface">JOB</span></div>
+      <div class="mb-6"><span class="stamp font-label-sm border-on-surface">APPLICATION</span></div>
       {% if not job %}
-        <h1 class="font-headline-lg text-headline-lg mb-4">Job not found</h1>
+        <h1 class="font-headline-lg text-headline-lg mb-4">Application not found</h1>
         <p class="font-body-md text-body-md text-on-surface-variant">This job is not published (or doesn’t exist).</p>
       {% else %}
         <h1 class="font-headline-lg text-headline-lg mb-4">{{ job.title }}</h1>

@@ -95,8 +95,6 @@ async def profile_get(request: Request, user=Depends(require_role("candidate")))
                 "other_links",
                 "available_from",
                 "hours_per_week",
-                "work_mode",
-                "notice_period_weeks",
                 "resume_url",
                 "resume_updated_at",
             ):
@@ -155,8 +153,6 @@ async def profile_post(request: Request, user=Depends(require_role("candidate"))
             other_links=other_links_raw,
             available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
             hours_per_week=form.get("hours_per_week"),
-            work_mode=form.get("work_mode"),
-            notice_period_weeks=form.get("notice_period_weeks") or None,
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/profile?error=validation", status_code=302)
@@ -328,8 +324,6 @@ async def complete_profile_get(request: Request, user=Depends(require_role("cand
                 "other_links",
                 "available_from",
                 "hours_per_week",
-                "work_mode",
-                "notice_period_weeks",
                 "resume_url",
                 "resume_updated_at",
             ):
@@ -387,8 +381,6 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
             other_links=other_links_raw,
             available_from=_normalize_ddmmyyyy_input(form.get("available_from")),
             hours_per_week=form.get("hours_per_week"),
-            work_mode=form.get("work_mode"),
-            notice_period_weeks=form.get("notice_period_weeks") or None,
         )
     except (ValidationError, ValueError):
         return RedirectResponse("/candidate/complete-profile?error=validation", status_code=302)
@@ -418,4 +410,7 @@ async def complete_profile_post(request: Request, user=Depends(require_role("can
 
     request.session["user"]["profile_completed"] = bool(updated.get("profile_completed"))
     request.session["user"]["name"] = updated.get("name")
+    next_url = str(request.session.pop("post_login_next", "") or "").strip()
+    if next_url.startswith("/") and not next_url.startswith("//"):
+        return RedirectResponse(next_url, status_code=302)
     return RedirectResponse("/candidate/dashboard", status_code=302)

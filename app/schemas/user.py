@@ -38,8 +38,6 @@ class CandidateProfileUpdate(BaseModel):
 
     available_from: str = Field(min_length=1, max_length=32)
     hours_per_week: int = Field(ge=1, le=80)
-    work_mode: Literal["remote", "hybrid", "onsite"]
-    notice_period_weeks: int | None = Field(default=None, ge=0, le=104)
 
     @field_validator("phone_number")
     @classmethod

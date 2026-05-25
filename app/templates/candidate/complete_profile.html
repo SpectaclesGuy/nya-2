@@ -26,7 +26,7 @@
             {% elif request.query_params.get("error") == "resume" %}
               Resume upload failed. Please upload a PDF (max 5MB) and try again.
             {% elif request.query_params.get("error") == "resume_required" %}
-              Please upload your resume in section <span class="font-label-md">06</span> to apply for jobs.
+              Please upload your resume in section <span class="font-label-md">06</span> to apply.
             {% else %}
               Please try again.
             {% endif %}
@@ -243,20 +243,6 @@
                 <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="hours_per_week" name="hours_per_week" type="number" min="1" max="80" placeholder="e.g., 20" required value="{{ user.hours_per_week or '' }}" />
               </div>
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="work_mode">Work mode</label>
-                {% set wm = user.work_mode or "" %}
-                <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="work_mode" name="work_mode" required>
-                  <option value="" disabled {% if wm == "" %}selected{% endif %}>Select</option>
-                  <option value="remote" {% if wm == "remote" %}selected{% endif %}>Remote</option>
-                  <option value="hybrid" {% if wm == "hybrid" %}selected{% endif %}>Hybrid</option>
-                  <option value="onsite" {% if wm == "onsite" %}selected{% endif %}>On-site</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-label-md text-label-md mb-2" for="notice_period_weeks">Notice period (weeks)</label>
-                <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="notice_period_weeks" name="notice_period_weeks" type="number" min="0" max="104" placeholder="e.g., 0" value="{{ user.notice_period_weeks or '' }}" />
-              </div>
             </div>
           </div>
 
@@ -264,7 +250,7 @@
             <button class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" type="submit">
               Save & continue
             </button>
-            <a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">Browse jobs</a>
+            <a class="border-2 border-on-surface bg-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:bg-surface-container-high transition-colors" href="/jobs">Browse applications</a>
           </div>
         </div>
 
@@ -284,7 +270,7 @@
                 <span class="stamp font-label-sm text-primary border-primary">Pending</span>
               </div>
               <div class="font-label-sm opacity-70">
-                Tip: add your resume once here â€” you wonâ€™t need to upload it for each job application.
+                Tip: add your resume once here and you won't need to upload it for each job application.
               </div>
             </div>
 

@@ -6,7 +6,7 @@
         <span class="stamp font-label-sm text-primary border-primary">ADMIN</span>
         <h1 class="font-headline-lg text-headline-lg mt-4">Stats</h1>
         <p class="font-body-md text-body-md text-on-surface-variant mt-2">
-          Job: <span class="font-label-md font-bold">{{ job.title }}</span>
+          Application: <span class="font-label-md font-bold">{{ job.title }}</span>
         </p>
       </div>
 
@@ -57,11 +57,10 @@
         {% if not q_stats %}
           <div class="bg-surface border-2 border-on-surface p-10">
             <div class="font-headline-md text-headline-md uppercase mb-2">No questions</div>
-            <p class="font-body-md text-body-md text-on-surface-variant">Add questions under Manage Jobs → Questions.</p>
+            <p class="font-body-md text-body-md text-on-surface-variant">Add questions under Manage Applications → Questions.</p>
           </div>
         {% endif %}
       </div>
     </div>
   </section>
 {% endblock %}
-

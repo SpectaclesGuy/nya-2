@@ -14,7 +14,12 @@
           <span class="stamp font-label-sm text-primary border-primary">APPLY</span>
           <h1 class="font-headline-lg text-headline-lg mt-4">{{ section_label }}</h1>
           <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-3xl">
+            Youâ€™re filling the questionnaire for <span class="font-label-md font-bold">{{ section_label }}</span>.
+            Scroll inside the dossier, not the whole page.
           </p>
+          <div class="mt-4">
+            <span class="stamp font-label-sm border-on-surface">FILLING: {{ section_label }}</span>
+          </div>
         </div>
         <a class="border-2 border-on-surface bg-surface px-6 py-3 font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors" href="/tracks/{{ 'project-internship' if section_key == 'project_internship' else 'research-internship' }}">
           Back

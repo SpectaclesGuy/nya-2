@@ -7,14 +7,14 @@
           <div>
             <div class="inline-flex items-center gap-3">
               <span class="stamp font-label-sm border-on-surface">SUMMER FORGE // RESEARCH INTERNSHIP TRACK</span>
-              <span class="stamp font-label-sm text-primary border-primary">TRACK_01</span>
+              <span class="stamp font-label-sm text-primary border-primary">TRACK_02</span>
             </div>
             <h1 class="font-display-lg text-display-lg mt-6">Turn curiosity into research proof.</h1>
             <p class="font-body-lg text-body-lg text-on-surface-variant mt-6 max-w-xl">
               Work on literature reviews, AI/ML experiments, datasets, XAI, visualizations, technical writing, and paper-oriented research pipelines.
             </p>
             <div class="mt-8 flex gap-4 flex-wrap">
-              <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" href="/tracks/research-internship/apply">
+              <a class="bg-tertiary text-white border-2 border-on-surface px-8 py-4 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform" href="{{ '/tracks/research-internship/apply' if user else '/auth/google/login?next=/tracks/research-internship/apply' }}">
                 Apply for research track
               </a>
             </div>
@@ -80,7 +80,7 @@
         <div class="font-label-sm uppercase tracking-widest opacity-70">Ready to start the research?</div>
         <div class="font-headline-lg text-headline-lg mt-4">Turn curiosity into proof.</div>
         <div class="mt-8">
-          <a class="bg-surface text-on-surface border-2 border-on-surface px-10 py-5 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="/tracks/research-internship/apply">
+          <a class="bg-surface text-on-surface border-2 border-on-surface px-10 py-5 font-label-md text-label-md uppercase font-bold hover:scale-[1.02] active:scale-95 transition-transform inline-flex items-center gap-2" href="{{ '/tracks/research-internship/apply' if user else '/auth/google/login?next=/tracks/research-internship/apply' }}">
             Apply for research internship
             <span class="material-symbols-outlined">arrow_forward</span>
           </a>
