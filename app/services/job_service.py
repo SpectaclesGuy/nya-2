@@ -36,6 +36,20 @@ class JobService:
         return await db["jobs"].find_one({"_id": parse_objectid(job_id)})
 
     @staticmethod
+    async def get_jobs_by_ids(job_ids: list[str]) -> list[dict]:
+        db = get_db()
+        oids = []
+        for jid in job_ids or []:
+            try:
+                oids.append(parse_objectid(str(jid)))
+            except Exception:
+                continue
+        if not oids:
+            return []
+        cursor = db["jobs"].find({"_id": {"$in": oids}})
+        return [doc async for doc in cursor]
+
+    @staticmethod
     async def get_published_job(job_id: str) -> dict | None:
         db = get_db()
         return await db["jobs"].find_one({"_id": parse_objectid(job_id), "status": "published"})

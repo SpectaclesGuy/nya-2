@@ -65,3 +65,69 @@ class AdminService:
 
         return updated
 
+    @staticmethod
+    async def clear_candidate_profile(
+        *,
+        target_user_id: str,
+        performed_by_admin_id: str | None,
+        performed_by_email: str,
+    ) -> dict:
+        db = get_db()
+        oid = parse_objectid(target_user_id)
+        now = datetime.utcnow()
+        user = await db["users"].find_one({"_id": oid})
+        if not user:
+            raise RuntimeError("User not found")
+        if user.get("role") != "candidate":
+            raise RuntimeError("Only candidate profiles can be cleared")
+
+        unset_fields = {
+            "name": "",
+            "phone_number": "",
+            "alternate_email": "",
+            "current_city": "",
+            "current_country": "",
+            "linkedin_url": "",
+            "date_of_birth": "",
+            "gender": "",
+            "nationality": "",
+            "address": "",
+            "postal_code": "",
+            "university": "",
+            "degree": "",
+            "major": "",
+            "graduation_year": "",
+            "gpa": "",
+            "experience_level": "",
+            "years_of_experience": "",
+            "skills": "",
+            "experience_summary": "",
+            "github_url": "",
+            "portfolio_url": "",
+            "other_links": "",
+            "available_from": "",
+            "hours_per_week": "",
+            "resume_url": "",
+            "resume_public_id": "",
+            "resume_updated_at": "",
+        }
+
+        updated = await db["users"].find_one_and_update(
+            {"_id": oid},
+            {"$unset": unset_fields, "$set": {"profile_completed": False, "updated_at": now}},
+            return_document=ReturnDocument.AFTER,
+        )
+
+        await db["admin_audit_logs"].insert_one(
+            {
+                "action": "clear_candidate_profile",
+                "performed_by_admin_id": performed_by_admin_id,
+                "target_admin_id": str(user.get("_id")),
+                "target_email": normalize_email(user.get("login_email", "")),
+                "metadata": {"old_profile_completed": bool(user.get("profile_completed"))},
+                "created_at": now,
+                "performed_by_email": normalize_email(performed_by_email),
+            }
+        )
+
+        return updated

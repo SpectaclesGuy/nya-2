@@ -193,6 +193,29 @@ async def user_set_role(request: Request, user_id: str, user=Depends(require_rol
     return RedirectResponse("/admin/users", status_code=302)
 
 
+@router.post("/users/{user_id}/profile/delete")
+async def user_clear_profile(request: Request, user_id: str, user=Depends(require_role("admin"))):
+    try:
+        await validate_csrf(request)
+    except Exception:
+        return RedirectResponse("/admin/users?error=csrf", status_code=302)
+
+    # Prevent self-wipe (admin should not be able to break their own access easily).
+    if user.get("id") and str(user.get("id")) == user_id:
+        return RedirectResponse("/admin/users?error=self", status_code=302)
+
+    try:
+        await AdminService.clear_candidate_profile(
+            target_user_id=user_id,
+            performed_by_admin_id=str(user.get("id") or "") or None,
+            performed_by_email=str(user.get("login_email") or ""),
+        )
+    except Exception as e:
+        return RedirectResponse(f"/admin/users?error={type(e).__name__}", status_code=302)
+
+    return RedirectResponse("/admin/users", status_code=302)
+
+
 @router.get("/jobs", response_class=HTMLResponse)
 async def jobs_admin(request: Request, user=Depends(require_role("admin"))):
     try:

@@ -193,13 +193,13 @@ async def applications_list(request: Request, user=Depends(require_role("candida
         return RedirectResponse("/", status_code=302)
     apps = await ApplicationService.list_applications_for_user(user_id=str(user.get("id")), limit=2000)
     # attach job titles
-    job_ids = {a.get("job_id") for a in apps if a.get("job_id")}
+    job_ids = [str(a.get("job_id")) for a in apps if a.get("job_id")]
     jobs = {}
-    for jid in job_ids:
-        try:
-            j = await JobService.get_job(str(jid))
-        except Exception:
-            j = None
+    try:
+        job_docs = await JobService.get_jobs_by_ids(job_ids)
+    except Exception:
+        job_docs = []
+    for j in job_docs:
         if j and j.get("_id"):
             jobs[str(j.get("_id"))] = j
     for a in apps:

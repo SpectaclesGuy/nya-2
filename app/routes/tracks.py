@@ -3,8 +3,10 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.core.csrf import validate_csrf
+from app.core.rate_limit import limiter
 from app.core.security import require_role
 from app.core.templates import templates
+from app.core.submit_guard import submit_slot
 from app.services.application_service import ApplicationService
 from app.services.job_service import JobService
 from app.services.track_questionnaire_service import TrackQuestionnaireService
@@ -76,6 +78,7 @@ async def track_apply_get(request: Request, section: str, user=Depends(require_r
 
 
 @router.post("/{section}/apply")
+@limiter.limit("30/minute")
 async def track_apply_post(request: Request, section: str, user=Depends(require_role("candidate"))):
     if section not in {"project-internship", "research-internship"}:
         return RedirectResponse("/", status_code=302)
@@ -113,70 +116,74 @@ async def track_apply_post(request: Request, section: str, user=Depends(require_
         normalized_items.append(out)
     questions = [i for i in normalized_items if str((i or {}).get("item_type") or "question") == "question"]
 
-    form = await request.form()
-    answers_out: list[dict] = []
-    for q in sorted(questions, key=lambda x: int(x.get("order", 0))):
-        qid = str(q.get("question_id") or "")
-        qtype = str(q.get("question_type") or "text")
-        required = bool(q.get("required"))
-        options = [str(o) for o in (q.get("options") or [])]
+    try:
+        async with submit_slot(timeout_s=5.0):
+            form = await request.form()
+            answers_out: list[dict] = []
+            for q in sorted(questions, key=lambda x: int(x.get("order", 0))):
+                qid = str(q.get("question_id") or "")
+                qtype = str(q.get("question_type") or "text")
+                required = bool(q.get("required"))
+                options = [str(o) for o in (q.get("options") or [])]
 
-        field = f"q_{qid}"
-        if qtype == "multiple_choice":
-            values = form.getlist(field)  # type: ignore[attr-defined]
-            values = [str(v) for v in values if str(v)]
-            if required and not values:
-                return RedirectResponse(f"/tracks/{section}/apply?error=required", status_code=302)
-            for v in values:
-                if v not in options:
-                    return RedirectResponse(f"/tracks/{section}/apply?error=invalid", status_code=302)
-            answer_value: str | list[str] = values
-        else:
-            value = str(form.get(field) or "").strip()
-            if required and not value:
-                return RedirectResponse(f"/tracks/{section}/apply?error=required", status_code=302)
-            if qtype == "single_choice" and value:
-                if value not in options:
-                    return RedirectResponse(f"/tracks/{section}/apply?error=invalid", status_code=302)
-            answer_value = value
+                field = f"q_{qid}"
+                if qtype == "multiple_choice":
+                    values = form.getlist(field)  # type: ignore[attr-defined]
+                    values = [str(v) for v in values if str(v)]
+                    if required and not values:
+                        return RedirectResponse(f"/tracks/{section}/apply?error=required", status_code=302)
+                    for v in values:
+                        if v not in options:
+                            return RedirectResponse(f"/tracks/{section}/apply?error=invalid", status_code=302)
+                    answer_value: str | list[str] = values
+                else:
+                    value = str(form.get(field) or "").strip()
+                    if required and not value:
+                        return RedirectResponse(f"/tracks/{section}/apply?error=required", status_code=302)
+                    if qtype == "single_choice" and value:
+                        if value not in options:
+                            return RedirectResponse(f"/tracks/{section}/apply?error=invalid", status_code=302)
+                    answer_value = value
 
-        answers_out.append(
-            {
-                "question_id": qid,
-                "question_text": str(q.get("title") or ""),
-                "question_type": qtype,
-                "answer": answer_value,
-            }
-        )
+                answers_out.append(
+                    {
+                        "question_id": qid,
+                        "question_text": str(q.get("title") or ""),
+                        "question_type": qtype,
+                        "answer": answer_value,
+                    }
+                )
 
-    job_id_str = await _latest_published_job_id_for_section(section_key)
-    if not job_id_str:
-        return RedirectResponse(f"/tracks/{section}/apply?error=job", status_code=302)
+            job_id_str = await _latest_published_job_id_for_section(section_key)
+            if not job_id_str:
+                return RedirectResponse(f"/tracks/{section}/apply?error=job", status_code=302)
 
-    existing = await ApplicationService.find_by_job_and_user(job_id=job_id_str, user_id=str(user.get("id")))
-    if existing and existing.get("_id"):
-        return RedirectResponse(f"/candidate/applications/{existing.get('_id')}", status_code=302)
+            existing = await ApplicationService.find_by_job_and_user(job_id=job_id_str, user_id=str(user.get("id")))
+            if existing and existing.get("_id"):
+                return RedirectResponse(f"/candidate/applications/{existing.get('_id')}", status_code=302)
 
-    candidate_phone = str((user_doc or {}).get("phone_number") or "")
-    alternate_email = str((user_doc or {}).get("alternate_email") or "")
+            candidate_phone = str((user_doc or {}).get("phone_number") or "")
+            alternate_email = str((user_doc or {}).get("alternate_email") or "")
 
-    app_id = await ApplicationService.create_application(
-        data={
-            "job_id": job_id_str,
-            "user_id": str(user.get("id")),
-            "candidate_name": str(user.get("name") or ""),
-            "candidate_email": str(user.get("login_email") or ""),
-            "candidate_phone": candidate_phone,
-            "alternate_email": alternate_email,
-            "resume_url": resume_url or None,
-            "resume_public_id": resume_public_id or None,
-            "track_section": section_key,
-            "questionnaire_items": normalized_items,
-            "answers": answers_out,
-            "status": "submitted",
-        }
-    )
-    return RedirectResponse(f"/candidate/applications/{app_id}", status_code=302)
+            app_id = await ApplicationService.create_application(
+                data={
+                    "job_id": job_id_str,
+                    "user_id": str(user.get("id")),
+                    "candidate_name": str(user.get("name") or ""),
+                    "candidate_email": str(user.get("login_email") or ""),
+                    "candidate_phone": candidate_phone,
+                    "alternate_email": alternate_email,
+                    "resume_url": resume_url or None,
+                    "resume_public_id": resume_public_id or None,
+                    "track_section": section_key,
+                    "questionnaire_items": normalized_items,
+                    "answers": answers_out,
+                    "status": "submitted",
+                }
+            )
+            return RedirectResponse(f"/candidate/applications/{app_id}", status_code=302)
+    except RuntimeError:
+        return RedirectResponse(f"/tracks/{section}/apply?error=Server+busy.+Please+try+again+in+10s.", status_code=302)
 
 
 @router.get("/admin-preview/{section}", response_class=HTMLResponse)

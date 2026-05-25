@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: nya-mongo
+    restart: unless-stopped
+    # Mongo can easily eat RAM on 1GB boxes; cap WiredTiger cache.
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
+    volumes:
+      - nya_mongo_data:/data/db
+    networks:
+      - nya-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://127.0.0.1:27017/admin", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: nya-portal
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # 1GB RAM instance: keep a single worker and recycle periodically to avoid memory creep.
+      WEB_CONCURRENCY: "1"
+      GUNICORN_MAX_REQUESTS: "300"
+      GUNICORN_MAX_REQUESTS_JITTER: "50"
+      # Cap concurrent form submissions per worker to avoid swap death spirals.
+      SUBMIT_CONCURRENCY: "3"
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - nya-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  nya_mongo_data:
+
+networks:
+  nya-net:

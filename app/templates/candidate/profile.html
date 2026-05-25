@@ -73,7 +73,7 @@
             </div>
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="name">Full name </label>
+                <label class="block font-label-md text-label-md mb-2" for="name">Full name *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="name" name="name" required minlength="2" maxlength="120" placeholder="e.g., Doe John" value="{{ user.name or '' }}" />
               </div>
 
@@ -85,12 +85,12 @@
               </div>
 
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email </label>
+                <label class="block font-label-md text-label-md mb-2" for="alternate_email">Alternate email *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="alternate_email" name="alternate_email" type="email" required placeholder="personal@gmail.com" value="{{ user.alternate_email or '' }}" />
               </div>
 
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="phone_number">WhatsApp / Phone </label>
+                <label class="block font-label-md text-label-md mb-2" for="phone_number">WhatsApp / Phone *</label>
                 <input
                   class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md"
                   id="phone_number"
@@ -110,17 +110,17 @@
               </div>
 
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="current_city">City</label>
+                <label class="block font-label-md text-label-md mb-2" for="current_city">City *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="current_city" name="current_city" maxlength="80" placeholder="City" required value="{{ user.current_city or '' }}" />
               </div>
 
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="current_country">Country</label>
+                <label class="block font-label-md text-label-md mb-2" for="current_country">Country *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="current_country" name="current_country" maxlength="80" placeholder="Country" required value="{{ user.current_country or '' }}" />
               </div>
 
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="linkedin_url">LinkedIn</label>
+                <label class="block font-label-md text-label-md mb-2" for="linkedin_url">LinkedIn *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="linkedin_url" name="linkedin_url" maxlength="500" placeholder="https://linkedin.com/in/username" required value="{{ user.linkedin_url or '' }}" />
               </div>
             </div>
@@ -132,11 +132,11 @@
             </div>
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="date_of_birth">Date of birth</label>
+                <label class="block font-label-md text-label-md mb-2" for="date_of_birth">Date of birth *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="date_of_birth" name="date_of_birth" placeholder="DD-MM-YYYY" required value="{{ user.date_of_birth or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="gender">Gender</label>
+                <label class="block font-label-md text-label-md mb-2" for="gender">Gender *</label>
                 <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="gender" name="gender" required>
                   {% set g = user.gender or "" %}
                   <option value="" disabled {% if g == "" %}selected{% endif %}>Select</option>
@@ -147,15 +147,15 @@
                 </select>
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="nationality">Nationality</label>
+                <label class="block font-label-md text-label-md mb-2" for="nationality">Nationality *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="nationality" name="nationality" maxlength="80" placeholder="Nationality" required value="{{ user.nationality or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="postal_code">Postal code</label>
+                <label class="block font-label-md text-label-md mb-2" for="postal_code">Postal code *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="postal_code" name="postal_code" maxlength="20" placeholder="Postal code" required value="{{ user.postal_code or '' }}" />
               </div>
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="address">Address</label>
+                <label class="block font-label-md text-label-md mb-2" for="address">Address *</label>
                 <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[110px]" id="address" name="address" maxlength="500" placeholder="Street / locality / full address" required>{{ user.address or '' }}</textarea>
               </div>
             </div>
@@ -167,23 +167,23 @@
             </div>
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="university">University / Institution</label>
+                <label class="block font-label-md text-label-md mb-2" for="university">University / Institution *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="university" name="university" maxlength="120" placeholder="University" required value="{{ user.university or 'Thapar Institute of Engineering & Technology' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="degree">Degree</label>
+                <label class="block font-label-md text-label-md mb-2" for="degree">Degree *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="degree" name="degree" maxlength="120" placeholder="e.g., B.Tech" required value="{{ user.degree or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="major">Major</label>
+                <label class="block font-label-md text-label-md mb-2" for="major">Major *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="major" name="major" maxlength="120" placeholder="e.g., Computer Science" required value="{{ user.major or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="graduation_year">Graduation year</label>
+                <label class="block font-label-md text-label-md mb-2" for="graduation_year">Graduation year *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g., 2026" required value="{{ user.graduation_year or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="gpa">GPA</label>
+                <label class="block font-label-md text-label-md mb-2" for="gpa">GPA *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="gpa" name="gpa" maxlength="20" placeholder="e.g., 8.1 / 10" required value="{{ user.gpa or '' }}" />
               </div>
             </div>
@@ -195,7 +195,7 @@
             </div>
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="experience_level">Experience level</label>
+                <label class="block font-label-md text-label-md mb-2" for="experience_level">Experience level *</label>
                 {% set el = user.experience_level or "" %}
                 <select class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="experience_level" name="experience_level" required>
                   <option value="" disabled {% if el == "" %}selected{% endif %}>Select</option>
@@ -207,16 +207,16 @@
                 </select>
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="years_of_experience">Months of experience</label>
+                <label class="block font-label-md text-label-md mb-2" for="years_of_experience">Months of experience *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="years_of_experience" name="years_of_experience" type="number" step="0.5" min="0" max="60" placeholder="e.g., 1.5" required value="{{ user.years_of_experience or '' }}" />
               </div>
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="skills">Skills (comma separated)</label>
+                <label class="block font-label-md text-label-md mb-2" for="skills">Skills (comma separated) *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="skills" name="skills" placeholder="Python, FastAPI, React, MongoDB, ..." required value="{{ (user.skills or [])|join(', ') }}" />
                 <div class="font-label-sm text-label-sm opacity-60 mt-2">Add technologies, tools, frameworks, or keywords.</div>
               </div>
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="experience_summary">Experience summary</label>
+                <label class="block font-label-md text-label-md mb-2" for="experience_summary">Experience summary *</label>
                 <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[140px]" id="experience_summary" name="experience_summary" maxlength="2000" placeholder="Briefly describe internships, projects, or relevant experience." required>{{ user.experience_summary or '' }}</textarea>
               </div>
             </div>
@@ -236,7 +236,7 @@
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="portfolio_url" name="portfolio_url" maxlength="500" placeholder="https://yourwebsite.com" value="{{ user.portfolio_url or '' }}" />
               </div>
               <div class="sm:col-span-2">
-                <label class="block font-label-md text-label-md mb-2" for="other_links">Other links (one per line)</label>
+                <label class="block font-label-md text-label-md mb-2" for="other_links">Other links (one per line) *</label>
                 <textarea class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md min-h-[110px]" id="other_links" name="other_links" placeholder="https://scholar.google.com/, https://behance.net/..." required>{% if user.other_links %}{{ (user.other_links or [])|join('\n') }}{% endif %}</textarea>
               </div>
             </div>
@@ -265,11 +265,11 @@
             </div>
             <div class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="available_from">Available from</label>
+                <label class="block font-label-md text-label-md mb-2" for="available_from">Available from *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="available_from" name="available_from" placeholder="DD-MM-YYYY" required value="{{ user.available_from or '' }}" />
               </div>
               <div>
-                <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week</label>
+                <label class="block font-label-md text-label-md mb-2" for="hours_per_week">Hours per week *</label>
                 <input class="w-full border-2 border-on-surface bg-surface-container-lowest px-4 py-3 font-body-md" id="hours_per_week" name="hours_per_week" type="number" min="1" max="80" placeholder="e.g., 20" required value="{{ user.hours_per_week or '' }}" />
               </div>
             </div>

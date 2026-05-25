@@ -28,6 +28,7 @@
               <th class="p-4">Active</th>
               <th class="p-4">Last Login</th>
               <th class="p-4">Admin</th>
+              <th class="p-4">Profile</th>
             </tr>
           </thead>
           <tbody>
@@ -56,11 +57,24 @@
                     </button>
                   </form>
                 </td>
+                <td class="p-4">
+                  <form method="post" action="/admin/users/{{ u._id }}/profile/delete" onsubmit="return confirm('Clear this candidate profile (including resume) and mark as incomplete?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token(request) }}" />
+                    <button
+                      class="border-2 border-on-surface bg-error-container px-4 py-2 font-label-sm uppercase font-bold hover:bg-on-surface hover:text-white transition-colors {% if u.role != 'candidate' %}opacity-40 cursor-not-allowed{% endif %} {% if user.id and (user.id|string) == (u._id|string) %}opacity-40 cursor-not-allowed{% endif %}"
+                      type="submit"
+                      {% if u.role != 'candidate' %}disabled{% endif %}
+                      {% if user.id and (user.id|string) == (u._id|string) %}disabled{% endif %}
+                    >
+                      Delete profile
+                    </button>
+                  </form>
+                </td>
               </tr>
             {% endfor %}
             {% if not users %}
               <tr>
-                <td class="p-8" colspan="7">No users found.</td>
+                <td class="p-8" colspan="8">No users found.</td>
               </tr>
             {% endif %}
           </tbody>
