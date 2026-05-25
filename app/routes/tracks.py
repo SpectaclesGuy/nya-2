@@ -58,8 +58,6 @@ async def track_apply_get(request: Request, section: str, user=Depends(require_r
         return RedirectResponse("/candidate/complete-profile", status_code=302)
 
     user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
-    if not (user_doc or {}).get("resume_url") and not (user_doc or {}).get("resume_public_id"):
-        return RedirectResponse("/candidate/profile?error=resume_required", status_code=302)
 
     qdoc = await TrackQuestionnaireService.get_by_section(section=section_key)
     items = (qdoc.get("items") if qdoc else None) or (qdoc.get("questions") if qdoc else None) or []
@@ -98,8 +96,6 @@ async def track_apply_post(request: Request, section: str, user=Depends(require_
     user_doc = await UserService.find_by_login_email(str(user.get("login_email") or ""))
     resume_url = str((user_doc or {}).get("resume_url") or "")
     resume_public_id = str((user_doc or {}).get("resume_public_id") or "")
-    if not resume_url and not resume_public_id:
-        return RedirectResponse("/candidate/profile?error=resume_required", status_code=302)
 
     qdoc = await TrackQuestionnaireService.get_by_section(section=section_key)
     items = (qdoc or {}).get("items") or (qdoc or {}).get("questions") or []
