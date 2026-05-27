@@ -20,16 +20,31 @@ from app.services.application_service import ApplicationService
 from app.services.job_service import JobService
 from app.schemas.questions import JobQuestionUpsert, QuestionnaireSectionUpsert
 from app.services.track_questionnaire_service import TrackQuestionnaireService
+from app.core.database import get_db
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request, user=Depends(require_role("admin"))):
+    total_users = 0
+    total_submissions = 0
+    try:
+        db = get_db()
+        total_users = await db["users"].count_documents({})
+        total_submissions = await db["applications"].count_documents({})
+    except Exception:
+        total_users = 0
+        total_submissions = 0
     return templates.TemplateResponse(
         request,
         "admin/dashboard.html",
-        {"user": user, "page_title": "Admin Dashboard"},
+        {
+            "user": user,
+            "page_title": "Admin Dashboard",
+            "total_users": total_users,
+            "total_submissions": total_submissions,
+        },
     )
 
 

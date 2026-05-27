@@ -12,4 +12,6 @@ class ForgeStatusOut(BaseModel):
     heat_label: str | None = Field(default=None, max_length=24)
     pod_tracks_active: int | None = Field(default=None, ge=0, le=10_000)
     seats_left: int | None = Field(default=None, ge=0, le=10_000)
+    total_users: int | None = Field(default=None, ge=0, le=10_000_000)
+    total_submissions: int | None = Field(default=None, ge=0, le=10_000_000)
     updated_at: datetime | None = None

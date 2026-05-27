@@ -475,7 +475,7 @@
 <div class="font-label-sm font-bold opacity-40 uppercase">Status</div>
 <div class="flex items-center gap-2">
 <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-<span class="font-label-md text-label-md">STATUS: FORGING</span>
+<span class="font-label-md text-label-md">FORGING</span>
 </div>
 <span class="block font-label-md text-label-md">PROTOCOL: 00-1B</span>
 </div>
@@ -513,14 +513,14 @@
             const statusText = String(data.status || 'Active');
             const heatLabel = String(data.heat_label || '').toUpperCase();
             const podsActive = 2;
-            const seatsLeft = Number(data.seats_left);
+            const totalUsers = Number(data.total_users ?? data.seats_left);
 
             if (forgeStatusEls.state) forgeStatusEls.state.textContent = `Status: ${statusText}`;
             // Re-mapped portal metrics:
             // - pod_tracks_active -> published jobs
             // - seats_left        -> total applications
             if (forgeStatusEls.pods) forgeStatusEls.pods.textContent = `${podsActive} LIVE`;
-            if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = `${Number.isFinite(seatsLeft) ? seatsLeft : 15} TOTAL`;
+            if (forgeStatusEls.seats) forgeStatusEls.seats.textContent = `${Number.isFinite(totalUsers) ? totalUsers : 15} TOTAL`;
             return true; 
         }; 
 

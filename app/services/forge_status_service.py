@@ -18,6 +18,7 @@ class ForgeStatusService:
         db = get_db()
         published_jobs = await db["jobs"].count_documents({"status": "published"})
         total_applications = await db["applications"].count_documents({})
+        total_users = await db["users"].count_documents({})
 
         since = datetime.utcnow() - timedelta(hours=24)
         applications_24h = await db["applications"].count_documents({"created_at": {"$gte": since}})
@@ -44,7 +45,10 @@ class ForgeStatusService:
             "heat_label": heat_label,
             # Re-map the original fields to portal metrics.
             "pod_tracks_active": int(published_jobs),
-            "seats_left": int(total_applications),
+            # Historically used by the landing page. Now mapped to total users (base count).
+            "seats_left": int(total_users),
+            "total_users": int(total_users),
+            "total_submissions": int(total_applications),
             "updated_at": datetime.utcnow(),
         }
 

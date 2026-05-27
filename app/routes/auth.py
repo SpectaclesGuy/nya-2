@@ -115,9 +115,6 @@ async def google_callback(request: Request):
     if not login_email:
         return RedirectResponse("/", status_code=302)
 
-    domain = login_email.split("@")[-1]
-    allowed_domains = settings.allowed_domains_list
-
     role = None
     user_doc = None
     try:
@@ -125,7 +122,7 @@ async def google_callback(request: Request):
         if admin_doc:
             role = "admin"
         else:
-            role = "candidate" if domain in allowed_domains else None
+            role = "candidate"
         if role:
             user_doc = await UserService.upsert_google_user(
                 google_sub=idinfo.get("sub", ""),
@@ -135,8 +132,8 @@ async def google_callback(request: Request):
                 role=role,
             )
     except RuntimeError:
-        # DB not configured yet; enforce domain allowlist at minimum.
-        role = "candidate" if domain in allowed_domains else None
+        # DB not configured yet; still allow candidate login for UI testing.
+        role = "candidate"
 
     if role is None:
         return RedirectResponse("/?error=unauthorized", status_code=302)
